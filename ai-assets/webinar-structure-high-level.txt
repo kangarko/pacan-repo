@@ -1,0 +1,42 @@
+﻿Webinar Notes
+
+
+* Intro: Watch out for fake case studies
+   * Watch out for the bullshit. A lot of these crazy stories have either moat or extremely technically skilled co-founder:
+      * https://analyticsindiamag.com/ai-news-updates/a-vibe-coded-app-made-3-million-in-48-hours-says-lovable-ceo/ -> truth is they are a big company, big brand, just added a feature to their existing product
+* Show the dream: Cursor story $0 to 100M ARR in 12 Months
+   * Show the story
+* Objection: But HOW can you do it? 
+   * No skills, beginner, maybe you just want to scale to 10k MRR, many of you want more but don’t have an idea how
+   * Plus you don’t want to give away 50% of your company to investors…
+   * The better way: Mikolaj $0 to 40k MRR in 8 months
+      * Epiphany #1: Mikolaj did not start with an app
+         * Old way: Need investors, build for 12 months, then launch, lose money
+         * New way: 1-man team, cashflow positive day one, vibe coding your funnel, not even paying for subscriptions (no clickfunnels etc)
+         * Mikolaj made a VSL first, got people on the phone call, understood the market, their objects
+         * After getting 12 high ticket, retainer paying clients, he THEN converted the funnel into a webinar (saved hours of time on sales calls) and FINALLY ONLY AFTER THAT started to build his saas
+         * Mindset shift: Cashflow first, bootstrap is ok, no need to rush for funding
+         * -> Show his funnels and saas
+      * Show other successful people: Sam Ovens
+         * Show my video with him from 2020 when he was building Skool
+         * He got consulting.com profitable, saved 10M and bootstrapped skool AFTER
+         * Again, cashflow positive first
+         * Forced all of his students to use skool to test adoption and optimize before going mass market
+* Vibe coding truth: Not yet ready for end-to-end SaaS, at some point you got to become techy OR hire an engineer
+   * Vibe coding is not yet production ready. Can’t make end-to-end saas apps. Still cumbersome. 
+      * The micro-SaaS route is a trap for 90% of non-techy audience. They'll build some bullshit PDF generator, make $500/month, and get stuck.
+   * BUT, it’s powerful enough to design your front-end. And all you need is a simple sales funnel to start making money.
+   * Epiphany #2: Vibe code the funnel (VSL, webinar optins, sales pages), not the app itself!
+* A quick demo
+   * Show them how to build a registration page to get leads, or get people on a phone call, or even how to build a fully functional front-end
+* The path forward
+   * For techy founders: Simple, "boring" SaaS apps solving specific business problems are generating $5K-50K monthly recurring revenue
+   * For non techy founders: High ticket VSL or a webinar offer, scale it to 20-40k/mo and THEN hire 1-2 devs to build the SaaS.
+* The pitch
+   * We’re offering an accelerator, end-to-end help, the biggest difference from us vs the VCs is that we don’t take a percentage of your company, you gonna have 12-month access to our platform, support, 2X weekly Q&As, market insights every week, you can leave at any time
+* Objections handling
+   * How to find ideas > Requests For Startups, Claude Research
+   * Do I need money
+   * How much time
+   * Do I need skillset
+Page /

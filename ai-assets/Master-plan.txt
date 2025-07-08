@@ -1,0 +1,197 @@
+﻿Vibe To Exit™
+Build, Monetize & Sell Your AI Business in 12 Months, Guaranteed - Or Money Back
+
+
+Responsibilities
+
+
+* Sales: Matej
+* Funnel: Matej
+* Course: Matej
+   * Frontend
+   * Techy
+* Backend course: Václav
+   * Funding
+   * Investing
+   * Socials - yt
+
+
+Deliverables
+
+
+* Send Vaclav collab document + contract
+* Finish vibetoexit.com lander (1d)
+* Prepare fb ads, launch initial ads + retargeting (1d)
+* Broadcast to students (0.5d)
+* Prepare email sequence to leads (0.5d)
+* Host live webinar 1-2x weekly > pitch frontend (2-3d)
+* Start building course after 1-2 sales if CPA is good (7d for one week in course generally)
+
+
+Budget
+
+
+500€ each for Facebook ads.
+
+
+Niches
+
+
+Small startups (CEOs/C-suite) > narrowest positioning, highest price
+
+
+* Segment:
+   * Pre-seed AI startups stuck in validation limbo
+* Problem:
+   * Sales processes become especially problematic for non-technical founders
+   * CMP bump > Customer acquisition costs destroy unit economics
+
+
+Engineers
+
+
+* Segment: 
+   * First-time founders or ex-employees looking to build something real
+   * Indie hackers with unfinished projects or early traction
+* Problem:
+   * Non-technical founders face technical debt, lack of monetization knowhow, and defensive moats that evaporate overnight when AI company releases a new feature
+   * Vendor lock: Anyone building a multi million dollar app on a closed ecosystem is risking everything if the platform changes (i.e. Skool)
+      * “Bubble costs us more in hosting than our office rent making it almost impossible for us to sell it to a client”
+   * API zero moat: Dependency on third-party APIs creates zero moat against competitors
+   * Technical debt accumulated from lacking AI coding tools (security, hidden bugs etc)
+   * Pricing with each API costs > different from traditional high margin SaaS
+
+
+Beginners (bizop) > broadest position, still can do high ticket
+
+
+* Segment:
+   * Anyone who wants a real shot at cashflow, investment, or exit — without BS
+   * Techy beginners looking to make money only with SaaS 
+   * Creators, engineers, and marketers who want to launch a side-biz
+   * Niche jumpers, avid buyers > “you’ve tried XYZ, don't waste your time, do this AI thing + show proof of no code startups getting to millions”
+      * > how do we want them to feel?
+      * > reason to believe = screenshots of companies raised millions of dollars, successful founder example
+      * > fomo > avoid getting stuck at the end useless on minimum income in a few years
+      * > sell the alternative > build a saas using AI agent > get 10k/mo
+* Problem:
+   * Anyone can build an AI startup today. But almost no one knows how to monetize, defend, or sell it.
+   * Market saturation:
+      * In 2024, chatbots and image editing apps comprised "almost the entire list of top 30 AI apps by global downloads
+
+
+Branding & Domains
+* vibetoexit.com (bought, 15€)
+* vibecoding.io (10k)
+* codingvibes.com (1.3k)
+* vibecodehero.ai ($90)
+Competitors
+
+
+* codefa.st
+   * $299 one-time > lander to Stripe checkout
+   * Package includes shipfa.st
+   * Open financials: Makes about 30k MRR > https://marclou.com/ 
+* aibuilderclub.com
+   * $37/mo > lander to Stripe checkout
+   * Financials: (Skool) 680 members at $37/mo = 25k/mo, since moved away. If let’s say they crossed 1k users = est. 37k MRR
+* Bootcamps charging from cca $400 to $22,000 
+   * Hackathon for 1k
+* Agencies
+   * builder.ai (raised over $450M > billion-dollar valuation > bankruptcy)
+
+
+
+
+🟩 Frontend Program: “Vibe To Exit”
+
+
+We help you go from idea → MVP → first $10K MRR → ready to raise or exit
+
+
+Price: 1-2k (tiered access) plus recurring community
+Audience: Broad — solo founders, ex-tech employees, indie hackers, early-stage startup builders
+
+
+Message
+
+
+* Full “incubator” like experience (from 0 to 10k MRR)
+* We help you go from idea → MVP → first $10K MRR → ready to raise or exit
+* We help you identify a real problem, build an AI-powered product that solves it, and turn it into a sellable business — in 12 months or less. No fluff, no guesswork, no code needed.
+* We help people build lean, profitable tech companies with no employees — because today, being small is the new unfair advantage. You don’t need to code. You don’t need a team. All you need is the right idea, the right tools — and the roadmap.
+* Just like the creator economy let anyone launch a YouTube channel or IG brand… the AI wave now lets anyone become a tech founder.
+* We help you build an AI startup you can actually sell.
+* From MVP to your first $10K MRR to a buyer in 12 months.
+* If you’ve ever wanted to launch a startup — this is your moment.
+* You don’t need to raise VC. You need one good product and one strategic buyer.
+
+
+Funnel Flow
+
+
+1. Ad / Organic content → Free Workshop / VSL / Challenge
+   1. Funnel: Live webinar > then prerecorded to a $997-2k offer > annual skool? downsell can be monthly 
+2. After 4–6 weeks, upsell to Mastermind (by application or post-webinar)
+   1. Or downsell to monthly sub
+
+
+
+
+💎 Backend Upsell: “7-Figure Dubai Masterclass”
+
+
+Scale your AI business to 7-figures — or prep it for a high-value strategic exit.
+
+
+Price: $5K–$15K (depending on cohort/intimacy)
+Format: Live + recorded, Dubai-based optional event (or hybrid)
+Access: Only for Exit AI grads or qualified existing founders
+Capacity: Limited, application-based, credibility booster
+
+
+
+
+Message
+
+
+* From cashflow to capital. From MVP to multi-million.
+* We build sellable businesses. Then we teach you how to scale like a pro.
+* If Vibe To Exit is your launchpad, the Dubai Masterclass is your playbook for generational leverage.
+* Go from your first $10K month… to your first $1M exit or raise.
+* We don’t just help you scale. We help you start — from niche to product idea to launch.
+* Even if you have no idea what to build, we’ll help you find a problem and ship your AI solution fast.
+* No coding needed. No idea needed. Just follow the framework.
+
+
+
+
+Outcomes
+
+* Deep defensibility: brand, distribution, LTV, data moats
+* Strategic fundraising: raise $250K–$2M from smart capital
+* Deal structuring for acquirers: term sheets, equity, silent sales
+* Operating lean with AI agents & global teams
+* Scaling media + authority
+* Building second and third products into your portfolio
+* Personal tax/legal optimization as a founder
+* Dubai as a global founder base — company setup, banking, lifestyle arbitrage
+
+
+Potential Upsells
+* Biz mastery - Scale: branding, tech moat, sales ops, team building
+   * Big Tech (like Google) rolls out 150 AI tools in a day → kills entire startups overnight
+   * Most founders won’t survive unless they build defensibility:
+      * Real distribution
+      * Sticky users
+      * Strategic brand or IP
+      * Clear exit/monetization plan
+* Venture studio (tech dev) (need 5k MRR)
+* Dubai 7 figure masterclass (need 5k MRR)
+* Investor Matchmaking (need 20k MRR)
+* MnA matchmaking for exit (need 1mil ARR)
+
+
+Ideas
+* Spolupráce na affiliate se studenty od - https://www.instagram.com/instakingphill
+Page /

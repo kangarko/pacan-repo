@@ -1,0 +1,101 @@
+# Plan for Creating Attachment Style Visualizations
+
+## 1. Četiri stila privrženosti (Four Attachment Styles Diagram)
+
+### Implementation Approach
+- Create using SVG for clarity and scalability
+- Layout: 2x2 grid structure showing four quadrants
+- Each quadrant will represent one attachment style:
+  - Sigurna privrženost (Secure)
+  - Anksiozna privrženost (Anxious)
+  - Izbjegavajuća privrženost (Avoidant)
+  - Dezorganizirana privrženost (Disorganized)
+
+### Technical Details
+- Use soft, professional colors (blues, greens)
+- Include iconic representations for each style
+- Add text labels in Croatian
+- Include brief descriptive text for each quadrant
+- Dimensions: 800x800 viewBox
+
+## 2. Infografika razvoja privrženosti (Attachment Development Infographic)
+
+### Implementation Approach
+- Create timeline-based visualization using SVG
+- Vertical progression showing key developmental stages
+- Include age ranges and developmental milestones
+
+### Technical Details
+- Timeline structure with connecting elements
+- Icons representing each developmental stage
+- Color-coded sections for different age ranges
+- Include key milestones:
+  - 0-6 months: Initial bonding
+  - 6-12 months: Stranger anxiety
+  - 12-24 months: Secure base behavior
+  - 2-5 years: Internal working models
+  - 5+ years: Complex attachment patterns
+
+## 3. Neurobiološki procesi (Neurobiological Processes Illustration)
+
+### Implementation Approach
+- Create anatomical brain diagram using SVG
+- Focus on key regions involved in attachment:
+  - Amygdala
+  - Hippocampus
+  - Prefrontal cortex
+  - Hypothalamus
+
+### Technical Details
+- Cross-sectional view of the brain
+- Color-coded regions
+- Overlay showing hormone pathways:
+  - Oxytocin
+  - Vasopressin
+  - Cortisol
+- Include labels in Croatian
+- Add arrows showing interaction pathways
+
+## 4. Rezultati istraživanja (Research Results Graph)
+
+### Implementation Approach
+- Create interactive bar chart using React and Recharts
+- Show distribution of attachment styles in population
+- Include comparative data if available
+
+### Technical Details
+- Horizontal bar chart
+- Color-coded bars for each attachment style
+- Include percentage values
+- Add hover effects for detailed information
+- Show:
+  - General population distribution
+  - Cross-cultural comparisons if available
+  - Age group variations if available
+
+## Implementation Order
+1. Start with Four Attachment Styles diagram as foundation
+2. Create Development Timeline next to establish progression
+3. Develop Neurobiological illustration
+4. Finally, create Research Results visualization
+
+## Technical Requirements
+- SVG for static illustrations
+- React/Recharts for interactive elements
+- Consistent color scheme across all visuals
+- Responsive design considerations
+- Croatian language labels with possible English subtitles
+- Export options for different formats/sizes
+
+## Quality Assurance
+- Verify medical accuracy of neurobiological representation
+- Ensure cultural sensitivity in iconic representations
+- Confirm accurate translation of technical terms
+- Test readability at different scales
+- Validate color choices for accessibility
+
+## Notes
+- All text will be in Croatian
+- Design should be culturally appropriate
+- Include references to source material
+- Maintain consistent style across all visualizations

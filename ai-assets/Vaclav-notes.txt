@@ -1,0 +1,68 @@
+Headlines:
+- The 5% who fundraise
+- Should you even fundraise? Or bootstrap
+- How to position YOURSELF for success
+- How to position the COMPANY (metrics) to be magnetic to investors
+- The rules, the players and the scorecard
+- When to fundraise
+- Difference between pre-seed, seed, series A/B/C, IPO
+- Who is a venture capitalist (VC) and a venture capital fund
+- What investors love and hate
+- Examples of companies and real stories
+- Where to find ideas if you can't decide on one
+
+Misconceptions:
+- "Investors will try to find opportunities" > "Investors will try to find reasons why NOT to invest"
+- "Raising = building" > With capital, you're buying speed. Not figuring out what you are doing (that's why you need MVP beforehand).
+- "Investors are here to make money on dividents" > "Investors make money on selling your company or products in the next 3-8 years to be worth 5-10X more, not 2-3X more."
+- "Investors care for good companies" > "Investors look for outliers."
+- "Getting an investor is a win" > "It's just a part of the puzzle"
+
+Key takeaways:
+- Venture capital is between angel investing/syndicates and private equity.
+	They look for things having traction that they can later sell, put on IPO etc. for a multiple.
+- In the beginning it's actually easier to look for angel investors or accelerators.
+	Angel investor (FFF=friends, family, "fools?"): Invest little (50-100k) but take 10-20% equity
+	Accelerator (y-combinator): Up to 10%
+	+Upside: Get your foot in the door for niches that need startup capital
+	-Downside: Won't be able to do other rounds of investing because you already gave a lot of % of the compamny
+- STRATEGY > INVESTORS
+- Series A: You can lose up to 50% of your company (if not more) > depends on amount of cofounders etc.
+- GIVE THEM THE GRAPH IMAGE (ownership evolution, valley of death)
+- Investors love obvious pain (they understand) and clear solution.
+	Keep it simple, one liner.
+	"Predictability, not fairytales"
+- Investors hate techy blurbs (nobody understands).
+	"Oh we're the Uber for food", "Tinder for animals" > sounds dumb
+	"We're for everyone/trillion dollar market" > you don't even know how to get 1% of the market lol
+		So much harder to get 1% of banking than 10% in some niche w/ great product-market fit
+		Back it up with data
+
+What you need know:
+- A founder-market fit: Focus on founder-market fit and early momentum = recurring revenue, referals, virality
+- A story: Why your feature is inevitable and the investor should be a part of > BUT this alone won't get you the investor, you need traction
+
+What you don't need:
+- A super duper techy product and NO traction
+
+Decisions to start:
+- Do you want to build it yourself?
+- Is taking other peoples' money something you want to do?
+	- Do you want to give away 40-50% of your company? Do you really need that much money?
+	i.e. if you got 5M€ right now, you would not be able to multiply it 10X
+		YOU WOULD MAKE THE SAME MISTAKE AS IF YOU GOT 2K
+		—> you need to develop ability to be resourcefull
+		–> too much money can make you make dumb decisions
+	- Ideally: Do yourself at the beginning (to a certain degree).
+- Bootstrapping: Slower, but it's controlled, profitable and you keep ownership
+	I.e. bootstraps for 5 years, sells for 5M, sells for 4.5M (before taxes)
+- VC-backed: Fast, you have external control to a degree, dilluted revenue, you'll have pressure
+	Some people need "good" pressure to succeed
+	I.e. raises 20M, exits for 100M, but owns 3% of the company by that time, takes home 3M
+	> if you wanna hang out with the big sharks
+	> if you want to build a billion dollar business
+	"if you want to play the big league, go VC"
+- Are you building a rocket or a profitable machine?
+
+- Selling growth and traction works better than hopeful pitch > noone wants to work with desperate people
+- Don't let others discourage you or convince you to do something you know is not right for you > what are their reasons/incentives
