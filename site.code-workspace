@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"explorer.autoReveal": false,
+		"explorer.fileNesting.enabled": false,
+		"files.exclude": {
+			".aider*": true,
+			".cursor/": true,
+			"**/.turbo/": true,
+			"**/.next/": true,
+			".vscode/": true,
+			"tsconfig.json": true,
+			"package-lock.json": true,
+			"**/next-env.d.ts": true,
+			"**/node_modules/": true,
+			"pnpm-lock.yaml": true
+		}
+	}
+}

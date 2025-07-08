@@ -1,0 +1,19 @@
+body {
+    @apply bg-[#FFF9E9] text-[#4b2c5e] antialiased;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4f2f7d;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #b469f6;
+}
+
+.order-form-highlight {
+    border-color: rgb(107, 73, 143);
+}
