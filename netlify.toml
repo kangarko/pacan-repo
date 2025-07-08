@@ -1,0 +1,35 @@
+[[redirects]]
+  from = "http://kristinamitrovic.com/*"
+  to = "https://kristinamitrovic.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.kristinamitrovic.com/*"
+  to = "https://kristinamitrovic.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.kristinamitrovic.com/*"
+  to = "https://kristinamitrovic.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://vibetoexit.com/*"
+  to = "https://vibetoexit.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.vibetoexit.com/*"
+  to = "https://vibetoexit.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.vibetoexit.com/*"
+  to = "https://vibetoexit.com/:splat"
+  status = 301
+  force = true
