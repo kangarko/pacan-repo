@@ -37,6 +37,7 @@
     "@types/js-cookie": "^3.0.6",
     "@types/mailparser": "^3.4.6",
     "@types/nodemailer": "^6.4.17",
+    "@netlify/edge-functions": "^2.15.5",
     "facebook-nodejs-business-sdk": "^23.0.0",
     "framer-motion": "^12.23.0",
     "idb": "^8.0.3",
