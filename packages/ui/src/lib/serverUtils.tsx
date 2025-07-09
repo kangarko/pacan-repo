@@ -1497,6 +1497,53 @@ export async function validateRequestBody(body: Record<string, any>, requiredFie
     }
 }
 
+/**
+ * Converts an IANA timezone string to a GMT offset string.
+ * @param timeZone The IANA timezone string (e.g., 'Europe/Bratislava').
+ * @returns The GMT offset string (e.g., 'GMT+2').
+ */
+export function convertTimeZoneToGmtOffset(timeZone: string): string {
+    if (!timeZone)
+        throw new Error('Timezone cannot be empty.');
+
+    try {
+        const date = new Date();
+        const parts = new Intl.DateTimeFormat('en', {
+            timeZone,
+            timeZoneName: 'longOffset',
+        }).formatToParts(date);
+
+        const timeZoneNamePart = parts.find((part) => part.type === 'timeZoneName');
+
+        if (!timeZoneNamePart)
+            throw new Error(`Could not determine GMT offset for timezone: ${timeZone}`);
+        
+        let gmtString = timeZoneNamePart.value;
+
+        if (gmtString === 'GMT') return gmtString;
+
+        const match = gmtString.match(/GMT([+-])(\d{1,2}):(\d{2})/);
+
+        if (match) {
+            const sign = match[1];
+            const hours = parseInt(match[2], 10);
+            const minutes = parseInt(match[3], 10);
+
+            if (minutes === 0)
+                return `GMT${sign}${hours}`;
+            else
+                return `GMT${sign}${hours}:${minutes}`;
+        }
+
+        return gmtString;
+    } catch (e) {
+        if (e instanceof RangeError)
+            throw new Error(`Invalid timezone provided: ${timeZone}`);
+        
+        throw e;
+    }
+}
+
 // ------------------------------------------------------------------------------------------------
 // PayPal
 // ------------------------------------------------------------------------------------------------

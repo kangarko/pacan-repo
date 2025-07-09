@@ -6,8 +6,9 @@ import dynamic from 'next/dynamic';
 import AboutUs from '@/components/AboutUs';
 import VideoFacade from '@/components/VideoFacade';
 import { EverwebinarSliderOptin } from '@repo/ui/components/EverwebinarSliderOptin';
+import TopAnnouncementBar from './TopAnnouncementBar';
 
-const webinarId = 5;    
+const webinarId = 5;
 
 // Lazy load non-critical sections
 const LogosSection = dynamic(() => import('./LogosSection'), {
@@ -16,6 +17,25 @@ const LogosSection = dynamic(() => import('./LogosSection'), {
 });
 
 const ChallengeRegistration = () => {
+    const whatYoullLearn = [
+        {
+            title: "Product Market Fit",
+            description: "Identify a problem worth solving using our AI-powered market research framework"
+        },
+        {
+            title: "Agentic MVP Building",
+            description: "No coding - build a complete product using agentic AI tools at low cost."
+        },
+        {
+            title: "Collecting Payments",
+            description: "Connect Stripe and PayPal to collect revenue immediately."
+        },
+        {
+            title: "Exit Strategy",
+            description: "Choose your outcome: cashflow, funding, or sale with our exit strategy."
+        }
+    ];
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white relative overflow-hidden">
             {/* Bokeh Background */}
@@ -36,136 +56,62 @@ const ChallengeRegistration = () => {
                 </svg>
             </div>
 
-            {/* Header */}
-            <header className="relative z-50 pt-6 hidden md:block">
-                <div className="container mx-auto px-4">
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-3">
-                            <div className="relative">
-                                <Rocket className="h-8 w-8 text-indigo-400 transform rotate-45" />
-                                <div className="absolute inset-0 animate-pulse">
-                                    <Rocket className="h-8 w-8 text-indigo-300 opacity-50 transform rotate-45" />
-                                </div>
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="font-bold text-2xl bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                                    Vibe To Exit
-                                </span>
-                                <span className="text-xs text-gray-400 -mt-1">Build, Monetize & Sell Your AI Business</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <TopAnnouncementBar />
 
             {/* Hero Section - Redesigned */}
             <section className="container mx-auto px-4 pt-8 pb-8 md:pt-12 md:pb-6">
-                {/* Headline and Subtitle - Centered */}
-                <div className="text-center mb-8 lg:mb-12 relative z-10">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4  mx-auto">
-                        <span className="text-white">The Step-by-Step Vibe Coding Playbook to Grow Your SaaS to $10K/Month Even If You&apos;re Starting From Zero</span>
+                <div className="text-center mb-8 lg:mb-12 relative z-10 max-w-6xl mx-auto">
+                    <h1 className="relative text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight">
+                        <span className="block lg:inline-flex lg:items-baseline lg:gap-x-4">
+                            The Step-by-Step Vibe Coding Playbook
+                        </span>
+                        <span className="block mt-4 lg:mt-2 lg:text-5xl text-white/90 font-semibold">
+                            to Grow Your SaaS to <span className="text-green-400 font-extrabold">$10k/mo</span> Even If You're <span className="underline decoration-pink-400 decoration-2 underline-offset-4">Starting From Zero</span>
+                        </span>
                     </h1>
-                    <p className="text-2xl text-gray-300 mx-auto">
+                    <p className="text-xl text-gray-300 mx-auto">
                         (Without hardcosts, investors or spending months on learning to code)
                     </p>
                 </div>
 
-                {/* Video and Form Section */}
-                <div className="flex flex-col lg:flex-row items-start gap-8 mb-6">
-                    {/* Video Section - Left */}
-                    <div className="lg:w-2/3 w-full relative z-10">
+                <div className="max-w-md mx-auto relative z-10" id="registration-form">
+                    <EverwebinarSliderOptin webinarId={webinarId} />
+                </div>
+            </section>
 
+            <section className="container mx-auto px-4 py-16">
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                    <div className="relative z-10">
                         <div className="relative rounded-xl overflow-hidden shadow-2xl">
-                            {/* Glow effect */}
                             <div className="absolute -inset-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl blur-xl opacity-50"></div>
-
-                            {/* Video Container */}
                             <div className="relative bg-gray-900 rounded-xl overflow-hidden">
-                                <VideoFacade 
+                                <VideoFacade
                                     videoId="1091115596"
                                     title="Vibe To Exit Workshop"
                                 />
                             </div>
                         </div>
-
-
-                        {/* Collective Achievements - Centered Below */}
-                        <div className="text-center mt-6">
-                            <p className="mb-3 text-gray-300">Learn from founders with proven track records:</p>
-                            <div className="flex flex-wrap sm:inline-flex items-center justify-center gap-3 sm:gap-2 md:gap-4 bg-gray-800/30 rounded-2xl sm:rounded-full px-4 sm:px-6 py-3 backdrop-blur-sm border border-gray-700/50">
-                                <div className="flex flex-col items-center px-2 sm:px-3">
-                                    <p className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">$14M+</p>
-                                    <p className="text-xs text-gray-400">Deployed</p>
-                                </div>
-                                <div className="hidden sm:block w-px h-8 bg-gray-700"></div>
-                                <div className="flex flex-col items-center px-2 sm:px-3">
-                                    <p className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">800K+</p>
-                                    <p className="text-xs text-gray-400">App Users</p>
-                                </div>
-                                <div className="hidden sm:block w-px h-8 bg-gray-700"></div>
-                                <div className="flex flex-col items-center px-2 sm:px-3">
-                                    <p className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-pink-400 to-indigo-400 bg-clip-text text-transparent">3,400+</p>
-                                    <p className="text-xs text-gray-400">Students</p>
-                                </div>
-                                <div className="hidden sm:block w-px h-8 bg-gray-700"></div>
-                                <div className="flex flex-col items-center px-2 sm:px-3">
-                                    <p className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">5</p>
-                                    <p className="text-xs text-gray-400">Exits</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
-                    {/* Registration Form - Right */}
-                    <div className="lg:w-1/2 relative z-10" id="registration-form">
-                        <div className="bg-gray-800/80 backdrop-blur-sm p-6 md:p-8 rounded-xl shadow-2xl w-full mx-auto">
-                            <div className="flex justify-center mb-4">
-                                <div className="bg-gradient-to-r from-indigo-600 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center relative">
-                                    <Rocket className="w-8 h-8 text-white transform rotate-45" />
-                                </div>
-                            </div>
-
-                            <h2 className="text-2xl font-bold text-center mb-2">Reserve Your Spot</h2>
-                            <p className="text-gray-400 text-center mb-6">Limited seats available for this workshop</p>
-
-                            {/* Benefits List */}
-                            <div className="space-y-3 mb-6">
-                                <div className="flex items-start gap-3">
+                    <div className="relative z-10">
+                        <h2 className="text-3xl font-bold mb-6 text-white">On This Workshop, You Will Learn...</h2>
+                        <ul className="space-y-4">
+                            {whatYoullLearn.map((item, index) => (
+                                <li key={index} className="flex items-start gap-3">
                                     <div className="bg-green-500/20 rounded-full p-1.5 mt-0.5 flex-shrink-0">
-                                        <CheckCircle className="w-4 h-4 text-green-400" />
+                                        <CheckCircle className="w-5 h-5 text-green-400" />
                                     </div>
                                     <div>
-                                        <p className="text-white font-medium">Complete AI Business Blueprint</p>
-                                        <p className="text-gray-400 text-sm">From idea validation to exit strategy</p>
+                                        <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                                        <p className="text-gray-400">{item.description}</p>
                                     </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <div className="bg-green-500/20 rounded-full p-1.5 mt-0.5 flex-shrink-0">
-                                        <CheckCircle className="w-4 h-4 text-green-400" />
-                                    </div>
-                                    <div>
-                                        <p className="text-white font-medium">No-Code AI Tools & Templates</p>
-                                        <p className="text-gray-400 text-sm">Build your MVP without writing code</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <div className="bg-green-500/20 rounded-full p-1.5 mt-0.5 flex-shrink-0">
-                                        <CheckCircle className="w-4 h-4 text-green-400" />
-                                    </div>
-                                    <div>
-                                        <p className="text-white font-medium">Rapid Traction Strategy</p>
-                                        <p className="text-gray-400 text-sm">Pre-sell your idea in just 48 hours</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <EverwebinarSliderOptin webinarId={webinarId} />
-                        </div>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             </section>
+
 
             {/* Collaboration Section */}
             <LogosSection />
@@ -184,7 +130,7 @@ const ChallengeRegistration = () => {
                 <div className="container mx-auto px-4 relative z-20">
                     <div className="text-center mb-12">
                         <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent">
-                            What You&apos;ll Learn LIVE
+                            What You&apos;ll Learn
                         </h2>
                     </div>
 
