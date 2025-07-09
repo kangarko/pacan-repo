@@ -1,0 +1,69 @@
+Register a person to a specific webinar (WebinarJam API)
+Modified on: Tue, 4 Mar, 2025 at 2:28 AM
+Method: POST
+Complete URL: https://api.webinarjam.com/webinarjam/register
+IMPORTANT: To register a person to a series of webinars, you must only request the registration once through the first schedule. The API will auto-register that person to all the following schedules within the series.
+
+The request must include all of the required fields, based on the table below:
+
+Name	Value
+api_key*	string(64)
+webinar_id*{+}	integer
+first_name*	string
+last_name**	string, optional
+email*	string
+schedule*{+}	int
+ip_address	string, optional
+phone_country_code**	string, optional, with "+"
+phone**	string, optional, only numbers
+* Required fields
+
+** This field might be required depending on the configured settings for each webinar
+
+{+} webinar_id and schedule must be obtained from a previous API call to retrieve the details of whatever specific webinar you want to register the person to. Also, please note that one particular schedule ID might refer to an entire series of webinars, and thus all individual webinar sessions within the same series will have the same schedule ID. In order to pin-point the specific individual session within a series, refer to the DATE parameter.
+
+The response body will be a JSON object containing a user object with the following:
+
+Name	Value	Description
+webinar_id	integer	Webinar ID
+webinar_hash	string	Webinar Hash
+user_id	int	Attendee Internal ID
+first_name	string	Attendee First Name
+last_name*	string	Attendee Last Name
+phone_country_code*	string	Attendee Phone Country Code
+phone*	string	Attendee Phone Number
+email	string	Attendee Email
+password*	string	Attendee unique password to the room
+schedule	int	Attendee Schedule
+date	string	Webinar date and time
+timezone	string	Webinar timezone
+live_room_url {+}	string	Live Room URL
+replay_room_url {+}	string	Replay Room URL
+thank_you_url {+}	string	Registration Success URL
+{+} live_room_url, replay_room_url and thank_you_url are unique to each attendee
+
+* These fields will be returned only if they are enabled within that particular webinar configuration settings
+
+Example CURL request
+curl --data "api_key=demokey&webinar_id=5&first_name=FirstName&last_name=LastName&email=test@email.com&phone_country_code=+1&phone=1234567890&schedule=34" https://api.webinarjam.com/webinarjam/register
+Example return
+{
+    "status": "success",
+    "user": {
+        "webinar_id": 5,
+        "webinar_hash": "pqrs7890",
+        "user_id": 1234567,
+        "first_name": "FirstName",
+        "last_name": "LastName",
+        "phone_country_code": "+1",
+        "phone": "1234567890",
+        "email": "test@email.com",
+        "password": null,
+        "schedule": 34,
+        "date": "2024-01-05 13:00",
+        "timezone": "America/Los_Angeles",
+        "live_room_url": "https://event.webinarjam.com/go/live/5/ab1cd2ef3",
+        "replay_room_url": "https://event.webinarjam.com/go/replay/5/ab1cd2ef3",
+        "thank_you_url": "https://event.webinarjam.com/registration/thank-you/5/ab1cd2ef3gh4"
+    }
+}
