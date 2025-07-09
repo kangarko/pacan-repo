@@ -61,7 +61,7 @@ const ChallengeRegistration = () => {
             {/* Hero Section - Redesigned */}
             <section className="container mx-auto px-4 pt-8 pb-8 md:pt-12 md:pb-6">
                 <div className="text-center mb-8 lg:mb-12 relative z-10 max-w-6xl mx-auto">
-                    <h1 className="relative text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight">
+                    <h1 className="relative text-3xl font-extrabold leading-tight mb-6 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
                         <span className="block lg:inline-flex lg:items-baseline lg:gap-x-4">
                             The Step-by-Step Vibe Coding Playbook
                         </span>
@@ -94,7 +94,7 @@ const ChallengeRegistration = () => {
                     </div>
 
                     <div className="relative z-10">
-                        <h2 className="text-3xl font-bold mb-6 text-white">On This Workshop, You Will Learn...</h2>
+                        <h2 className="text-2xl font-bold mb-6 text-white sm:text-3xl">On This Workshop, You Will Learn...</h2>
                         <ul className="space-y-4">
                             {whatYoullLearn.map((item, index) => (
                                 <li key={index} className="flex items-start gap-3">
@@ -129,7 +129,7 @@ const ChallengeRegistration = () => {
 
                 <div className="container mx-auto px-4 relative z-20">
                     <div className="text-center mb-12">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent">
+                        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent sm:text-4xl md:text-5xl">
                             What You&apos;ll Learn
                         </h2>
                     </div>
@@ -211,7 +211,7 @@ const ChallengeRegistration = () => {
 
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-400 via-red-400 to-orange-400 bg-clip-text text-transparent">
+                        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-orange-400 via-red-400 to-orange-400 bg-clip-text text-transparent sm:text-4xl md:text-5xl">
                             Come Build With Us!
                         </h2>
                     </div>
@@ -223,7 +223,7 @@ const ChallengeRegistration = () => {
                                     <div className="bg-gradient-to-r from-orange-600 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-600/20">
                                         <Clock className="h-8 w-8 text-white" />
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                                    <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent sm:text-2xl">
                                         The AI Gold Rush Has a Countdown Timer
                                     </h3>
                                     <p className="text-gray-300 leading-relaxed">
@@ -243,7 +243,7 @@ const ChallengeRegistration = () => {
                                     <div className="bg-gradient-to-r from-amber-600 to-orange-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-600/20">
                                         <Trophy className="h-8 w-8 text-white" />
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                                    <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent sm:text-2xl">
                                         Pick an Underserved Niche Before It&apos;s Saturated
                                     </h3>
                                     <p className="text-gray-300 leading-relaxed">
@@ -263,7 +263,7 @@ const ChallengeRegistration = () => {
                                     <div className="bg-gradient-to-r from-yellow-600 to-amber-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-yellow-600/20">
                                         <DollarSign className="h-8 w-8 text-white" />
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                                    <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent sm:text-2xl">
                                         72% of AI Startups Will Be Acquired or Fail
                                     </h3>
                                     <p className="text-gray-300 leading-relaxed">
@@ -290,7 +290,7 @@ const ChallengeRegistration = () => {
 
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-400 bg-clip-text text-transparent">
+                        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-400 bg-clip-text text-transparent sm:text-4xl md:text-5xl">
                             Who This Is For
                         </h2>
                     </div>
@@ -404,7 +404,7 @@ const ChallengeRegistration = () => {
 
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
+                        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent sm:text-4xl md:text-5xl">
                             Common Questions
                         </h2>
                     </div>
@@ -418,7 +418,7 @@ const ChallengeRegistration = () => {
                                             <span className="text-lg">🎥</span>
                                         </div>
                                         <div className="ml-4">
-                                            <h3 className="text-xl font-semibold mb-3 text-cyan-400">
+                                            <h3 className="text-lg font-semibold mb-3 text-cyan-400 sm:text-xl">
                                                 Is this a live workshop or pre-recorded?
                                             </h3>
                                             <p className="text-gray-300 leading-relaxed">
@@ -438,7 +438,7 @@ const ChallengeRegistration = () => {
                                             <span className="text-lg">💻</span>
                                         </div>
                                         <div className="ml-4">
-                                            <h3 className="text-xl font-semibold mb-3 text-teal-400">
+                                            <h3 className="text-lg font-semibold mb-3 text-teal-400 sm:text-xl">
                                                 Do I need coding experience?
                                             </h3>
                                             <p className="text-gray-300 leading-relaxed">
@@ -458,7 +458,7 @@ const ChallengeRegistration = () => {
                                             <span className="text-lg">📺</span>
                                         </div>
                                         <div className="ml-4">
-                                            <h3 className="text-xl font-semibold mb-3 text-emerald-400">
+                                            <h3 className="text-lg font-semibold mb-3 text-emerald-400 sm:text-xl">
                                                 What if I can&apos;t attend live?
                                             </h3>
                                             <p className="text-gray-300 leading-relaxed">
@@ -478,7 +478,7 @@ const ChallengeRegistration = () => {
                                             <span className="text-lg">🎯</span>
                                         </div>
                                         <div className="ml-4">
-                                            <h3 className="text-xl font-semibold mb-3 text-green-400">
+                                            <h3 className="text-lg font-semibold mb-3 text-green-400 sm:text-xl">
                                                 What do I need to prepare?
                                             </h3>
                                             <p className="text-gray-300 leading-relaxed">
@@ -498,7 +498,7 @@ const ChallengeRegistration = () => {
                                             <span className="text-lg">💰</span>
                                         </div>
                                         <div className="ml-4">
-                                            <h3 className="text-xl font-semibold mb-3 text-cyan-400">
+                                            <h3 className="text-lg font-semibold mb-3 text-cyan-400 sm:text-xl">
                                                 Will there be a pitch at the end?
                                             </h3>
                                             <p className="text-gray-300 leading-relaxed">
@@ -518,7 +518,7 @@ const ChallengeRegistration = () => {
                                             <span className="text-lg">🚀</span>
                                         </div>
                                         <div className="ml-4">
-                                            <h3 className="text-xl font-semibold mb-3 text-blue-400">
+                                            <h3 className="text-lg font-semibold mb-3 text-blue-400 sm:text-xl">
                                                 How are you different?
                                             </h3>
                                             <p className="text-gray-300 leading-relaxed">
@@ -553,7 +553,7 @@ const ChallengeRegistration = () => {
                             </div>
 
                             <div className="relative">
-                                <h2 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent">
+                                <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent sm:text-5xl md:text-6xl">
                                     Choose Your Pill
                                 </h2>
                                 <p className="text-gray-300 mb-12 text-lg">This is your last chance. After this, there is no turning back.</p>
@@ -570,7 +570,7 @@ const ChallengeRegistration = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent mb-4">Blue Pill</h3>
+                                            <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent mb-4 sm:text-2xl">Blue Pill</h3>
                                             <p className="text-gray-300 leading-relaxed">
                                                 The story ends. You wake up in your bed and believe whatever you want to believe. Keep watching as others build and exit.
                                             </p>
@@ -588,7 +588,7 @@ const ChallengeRegistration = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h3 className="text-2xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent mb-4">Red Pill</h3>
+                                            <h3 className="text-xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent mb-4 sm:text-2xl">Red Pill</h3>
                                             <p className="text-gray-300 leading-relaxed">
                                                 Join us <span className="text-red-400 font-semibold">at the next workshop</span> and I show you how deep the rabbit hole goes.
                                             </p>
