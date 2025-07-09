@@ -1,24 +1,26 @@
-Get details about one particular webinar from your account (WebinarJam API)
-Modified on: Tue, 4 Mar, 2025 at 2:28 AM
+Get details about one particular webinar from your account (EverWebinar API)
+Modified on: Tue, 4 Mar, 2025 at 2:25 AM
 Method: POST
-Complete URL: https://api.webinarjam.com/webinarjam/webinar
-The request must include all of the required fields, based on the table below:
+Complete URL: https://api.webinarjam.com/everwebinar/webinar
+  The request must include all of the required fields, based on the table below:
 
 Name	Value
 api_key*	string(64)
 webinar_id*	integer
+timezone **	GMT-5 or GMT+2 or GMT+4:30
 * Required fields
 
-The response body will be a JSON object containing a webinar object with the following:
+** Required if your webinar timezone is set to “Auto-detect the user’s time zone”.
+
+** For webinars configured to automatically display the schedule in the attendee’s own time zone, the API will automatically convert the time zone to EST if the time zone is not passed to the API call.   The response body will be a JSON object containing a webinar object with the following:
 
 Name	Value	Parent	Description
 webinar_id	integer		Webinar ID
-webinar_hash ****	string		Webinar Hash
 name	string		Webinar Name (Private)
 title	string		Webinar Title (Public)
+webinar_hash ****	string		Webinar Hash
 description	string	
 Webinar Description
-type	string		Series of presentations, Single presentation, Always on, Right now
 schedules	array		
 date	string	schedules	Date and time of webinar
 schedule	int	schedules	Schedule ID
@@ -40,30 +42,36 @@ direct_replay_room_url***	string		Direct URL to the Replay room
 
 *** These are generic links to the Live and Replay room, in case you want to send a user directly to those rooms without going through the Registration page
 
+Note: The number of returned schedules will match "Displayed schedules" setting from the EverWebinar schedules configuration for each webinar
+
 **** webinar_hash: this parameter is used in case you want your API to be able to generate the webinar’s one-click registration link.
 
 Example CURL request
-curl --data "api_key=demokey&webinar_id=5" https://api.webinarjam.com/webinarjam/webinar
+curl --data "api_key=demokey&webinar_id=6" https://api.webinarjam.com/everwebinar/webinar
 Example return
 {
     "status": "success",
     "webinar": {
-        "webinar_id": 5,
-        "webinar_hash": "pqrs7890",
-        "name": "Demo5",
-        "title": "Demo5",
-        "description": "Multiple events",
-        "type": null,
+        "webinar_id": 6,
+        "webinar_hash": "uvw1234",
+        "name": "Demo6",
+        "title": "Demo6",
+        "description": "My automated webinar",
         "schedules": [
             {
-                "date": "2024-01-05 13:00",
-                "schedule": 34,
-                "comment": "Friday, 5 Jan 2024, 01:00 PM"
+                "date": "2024-01-04 12:00",
+                "schedule": 54,
+                "comment": "Instant replay"
             },
             {
-                "date": "2024-01-06 14:00",
-                "schedule": 46,
-                "comment": "Saturday, 6 Jan 2024, 02:00 PM"
+                "date": "2024-01-05 12:00",
+                "schedule": 55,
+                "comment": "Just in time"
+            },
+            {
+                "date": "2024-01-05 13:00",
+                "schedule": 56,
+                "comment": "Every day, 01:00 PM"
             }
         ],
         "timezone": "America/Los_Angeles",
@@ -74,13 +82,13 @@ Example return
                 "picture": "https://test.s3.amazonaws.com/default_user.jpg"
             }
         ],
-        "registration_url": "https://event.webinarjam.com/register/5/pqrs7890",
+        "registration_url": "https://event.webinarjam.com/register/6/uvw1234",
         "registration_type": "free",
         "registration_fee": 0,
         "registration_currency": "",
         "registration_checkout_url": "",
         "registration_post_payment_url": "",
-        "direct_live_room_url": "https://event.webinarjam.com/go/live/5/pqrs7890ab12",
-        "direct_replay_room_url": "https://event.webinarjam.com/go/replay/5/pqrs7890ab12"
+        "direct_live_room_url": "https://event.webinarjam.com/go/live/6/uvw1234ab12",
+        "direct_replay_room_url": "https://event.webinarjam.com/go/replay/6/uvw1234ab12"
     }
 }

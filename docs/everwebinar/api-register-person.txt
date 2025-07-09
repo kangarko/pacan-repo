@@ -1,34 +1,40 @@
-Register a person to a specific webinar (WebinarJam API)
-Modified on: Tue, 4 Mar, 2025 at 2:28 AM
+Register a person to a specific webinar (EverWebinar API)
+Modified on: Tue, 4 Mar, 2025 at 2:25 AM
 Method: POST
-Complete URL: https://api.webinarjam.com/webinarjam/register
-IMPORTANT: To register a person to a series of webinars, you must only request the registration once through the first schedule. The API will auto-register that person to all the following schedules within the series.
-
-The request must include all of the required fields, based on the table below:
+Complete URL: https://api.webinarjam.com/everwebinar/register
+IMPORTANT: The request must include all of the required fields, based on the table below:
 
 Name	Value
 api_key*	string(64)
 webinar_id*{+}	integer
 first_name*	string
-last_name**	string, optional
+last_name***	string, optional
 email*	string
 schedule*{+}	int
 ip_address	string, optional
-phone_country_code**	string, optional, with "+"
-phone**	string, optional, only numbers
+phone_country_code***	string, optional, with "+"
+phone***	string, optional, only numbers
+timezone {-}	Examples: GMT-5 or GMT+2 or GMT+4:30
+date ****	2025-01-01 09:00
 * Required fields
 
-** This field might be required depending on the configured settings for each webinar
+** Required if your webinar timezone is set to “Auto-detect the user’s time zone”.
 
-{+} webinar_id and schedule must be obtained from a previous API call to retrieve the details of whatever specific webinar you want to register the person to. Also, please note that one particular schedule ID might refer to an entire series of webinars, and thus all individual webinar sessions within the same series will have the same schedule ID. In order to pin-point the specific individual session within a series, refer to the DATE parameter.
+*** This field might be required depending on the configured settings for each webinar
+
+{+} The webinar_id and schedule must be obtained from a previous API call to retrieve the details of whatever specific webinar you want to register the person to. Also, please note that one particular schedule ID might refer to an entire series of webinars, and thus all individual webinar sessions within the same series will have the same schedule ID. In order to pin-point the specific individual session within a series, refer to the DATE parameter.
+
+{-} For webinars configured to display the schedule in the attendee’s own time zone, the API will automatically convert the time zone to EST, unless you specify a particular time zone in your API call.
+
+**** Use the DATE parameter to register a person to a specific webinar session date. Make sure it matches a valid date returned by a previous API call, or else the API will not be able to register the user to any event at all. Also, if the call was made using a custom timezone, make sure that the same timezone is passed with the request.
 
 The response body will be a JSON object containing a user object with the following:
 
 Name	Value	Description
-webinar_id	integer	Webinar ID
+webinar_id	int	Webinar ID
 webinar_hash	string	Webinar Hash
 user_id	int	Attendee Internal ID
-first_name	string	Attendee First Name
+first_name	string	Attendee Name
 last_name*	string	Attendee Last Name
 phone_country_code*	string	Attendee Phone Country Code
 phone*	string	Attendee Phone Number
@@ -42,16 +48,16 @@ replay_room_url {+}	string	Replay Room URL
 thank_you_url {+}	string	Registration Success URL
 {+} live_room_url, replay_room_url and thank_you_url are unique to each attendee
 
-* These fields will be returned only if they are enabled within that particular webinar configuration settings
+* These fields will only be returned if they are enabled within the webinar’s configuration settings
 
 Example CURL request
-curl --data "api_key=demokey&webinar_id=5&first_name=FirstName&last_name=LastName&email=test@email.com&phone_country_code=+1&phone=1234567890&schedule=34" https://api.webinarjam.com/webinarjam/register
+curl --data "api_key=demokey&webinar_id=6&first_name=FirstName&last_name=LastName&email=test@email.com&phone_country_code=+1&phone=1234567890&schedule=55" https://api.webinarjam.com/everwebinar/register
 Example return
 {
     "status": "success",
     "user": {
-        "webinar_id": 5,
-        "webinar_hash": "pqrs7890",
+        "webinar_id": 6,
+        "webinar_hash": "uvw1234",
         "user_id": 1234567,
         "first_name": "FirstName",
         "last_name": "LastName",
@@ -59,11 +65,11 @@ Example return
         "phone": "1234567890",
         "email": "test@email.com",
         "password": null,
-        "schedule": 34,
-        "date": "2024-01-05 13:00",
+        "schedule": "55",
+        "date": "2024-01-05 12:00",
         "timezone": "America/Los_Angeles",
-        "live_room_url": "https://event.webinarjam.com/go/live/5/ab1cd2ef3",
-        "replay_room_url": "https://event.webinarjam.com/go/replay/5/ab1cd2ef3",
-        "thank_you_url": "https://event.webinarjam.com/registration/thank-you/5/ab1cd2ef3gh4"
+        "live_room_url": "https://event.webinarjam.com/go/live/6/ab1cd2ef3",
+        "replay_room_url": "https://event.webinarjam.com/go/replay/6/ab1cd2ef3",
+        "thank_you_url": "https://event.webinarjam.com/registration/thank-you/6/ab1cd2ef3gh4"
     }
 }
