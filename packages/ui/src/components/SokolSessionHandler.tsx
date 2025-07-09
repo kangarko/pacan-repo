@@ -60,8 +60,11 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
                 const headlineResponse = await fetchJsonPost('/api/headlines/active', {
                     slug: headlineSlug || undefined
                 });
+
+                if (headlineResponse?.headline === false)
+                    localStorage.setItem('active_headline', 'false');
                 
-                if (headlineResponse.headline) {
+                else if (headlineResponse.headline) {
                     // Save entire headline object to localStorage
                     localStorage.setItem('active_headline', JSON.stringify(headlineResponse.headline));
                 
@@ -71,9 +74,9 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
                         sameSite: 'lax',
                         secure: process.env.NODE_ENV === 'production',
                     });
-                    
+
                 } else 
-                    throw new Error('Failed to initialize headline');
+                    throw new Error('Response from headline API is not valid. Got: ' + JSON.stringify(headlineResponse));
 
             } catch (error) {
                 console.error('Failed to initialize headline:', error);

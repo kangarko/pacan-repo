@@ -118,10 +118,14 @@ const HeroSection = ({ primaryOffer, secondaryOffer, userContext, isLoading: pag
         try {
             const storedHeadline = localStorage.getItem('active_headline');
 
-            if (!storedHeadline)
-                throw new Error("No headline found in localStorage");
+            if (storedHeadline === 'false')
+                setHeadline(null);
 
-            setHeadline(JSON.parse(storedHeadline));
+            else if (storedHeadline)
+                setHeadline(JSON.parse(storedHeadline));
+
+            else
+                throw new Error("No headline found in localStorage");
 
         } catch (error) {
             sendClientErrorEmail("Error reading headline from localStorage", error);
