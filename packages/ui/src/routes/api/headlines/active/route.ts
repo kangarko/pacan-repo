@@ -34,7 +34,7 @@ export const POST = createPostHandler(async (body) => {
 
     if (!headlines || headlines.length === 0) 
         return createSuccessResponse({
-            headline: null,
+            headline: false,
         });    
 
     // Check if user has a selected headline in cookie
