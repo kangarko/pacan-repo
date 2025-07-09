@@ -23,6 +23,7 @@ const LogosSection = () => {
                                 height={32}
                                 className="h-8 md:h-8 w-auto filter brightness-0 invert"
                                 loading="lazy"
+                                style={{ width: 'auto' }}
                             />
                         </div>
 
@@ -35,6 +36,7 @@ const LogosSection = () => {
                                 height={32}
                                 className="h-8 md:h-22 w-auto filter grayscale"
                                 loading="lazy"
+                                style={{ width: 'auto' }}
                             />
                         </div>
 
@@ -47,6 +49,7 @@ const LogosSection = () => {
                                 height={32}
                                 className="h-8 md:h-18 w-auto filter grayscale"
                                 loading="lazy"
+                                style={{ width: 'auto' }}
                             />
                         </div>
 
@@ -59,6 +62,7 @@ const LogosSection = () => {
                                 height={40}
                                 className="h-8 md:h-10 w-auto filter brightness-0 invert"
                                 loading="lazy"
+                                style={{ width: 'auto' }}
                             />
                         </div>
 
@@ -71,6 +75,7 @@ const LogosSection = () => {
                                 height={24}
                                 className="h-6 md:h-6 w-auto filter brightness-0 invert"
                                 loading="lazy"
+                                style={{ width: 'auto' }}
                             />
                         </div>
                     </div>
