@@ -71,7 +71,10 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
                         sameSite: 'lax',
                         secure: process.env.NODE_ENV === 'production',
                     });
-                }
+                    
+                } else 
+                    throw new Error('Failed to initialize headline');
+
             } catch (error) {
                 console.error('Failed to initialize headline:', error);
             }
