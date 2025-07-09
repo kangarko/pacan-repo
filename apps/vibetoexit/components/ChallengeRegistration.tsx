@@ -5,6 +5,9 @@ import { ArrowRight, CheckCircle, Clock, DollarSign, Rocket, Sparkles, Trophy } 
 import dynamic from 'next/dynamic';
 import AboutUs from '@/components/AboutUs';
 import VideoFacade from '@/components/VideoFacade';
+import { EverwebinarSliderOptin } from '@repo/ui/components/EverwebinarSliderOptin';
+
+const webinarId = 5;    
 
 // Lazy load non-critical sections
 const LogosSection = dynamic(() => import('./LogosSection'), {
@@ -13,29 +16,6 @@ const LogosSection = dynamic(() => import('./LogosSection'), {
 });
 
 const ChallengeRegistration = () => {
-    const embedContainerRef = React.useRef<HTMLDivElement>(null);
-
-    // Load EverWebinar script
-    React.useEffect(() => {
-        const container = embedContainerRef.current;
-        if (!container) return;
-
-        // Create script element
-        const script = document.createElement('script');
-        script.src = 'https://event.webinarjam.com/register/nxz6zax/embed-button?formTemplate=2&formColor=6';
-        script.async = true;
-
-        // Load the script
-        container.appendChild(script);
-
-        // Cleanup function to remove script on unmount
-        return () => {
-            if (container && script.parentNode) {
-                container.removeChild(script);
-            }
-        };
-    }, []);
-
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white relative overflow-hidden">
             {/* Bokeh Background */}
@@ -181,56 +161,7 @@ const ChallengeRegistration = () => {
                                 </div>
                             </div>
 
-                            {/* EverWebinar Embed Container */}
-                            <div className="text-center">
-                                <div id="everwebinar-embed-container" ref={embedContainerRef}>
-                                    <button 
-                                        type="button" 
-                                        className="wj-embed-button" 
-                                        data-webinarhash="nxz6zax" 
-                                        style={{
-                                            border: '2px solid rgba(0, 0, 0, 0.5)',
-                                            background: 'rgba(239, 68, 68, 0.95)', // Changed to match red-600
-                                            color: 'rgb(255, 255, 255)',
-                                            fontSize: '20px',
-                                            padding: '16px 60px',
-                                            boxShadow: 'none',
-                                            borderRadius: '8px',
-                                            whiteSpace: 'normal',
-                                            fontWeight: '700',
-                                            lineHeight: '1.3',
-                                            cursor: 'pointer',
-                                            fontFamily: 'inherit',
-                                            wordBreak: 'break-word',
-                                            margin: 'auto',
-                                            transition: 'all 0.3s ease',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: '8px',
-                                            width: '100%',
-                                            justifyContent: 'center'
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.background = 'rgba(220, 38, 38, 0.95)'; // red-700
-                                            e.currentTarget.style.transform = 'translateY(-2px)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.95)'; // red-600
-                                            e.currentTarget.style.transform = 'translateY(0)';
-                                        }}
-                                    >
-                                        YES! RESERVE MY FREE SEAT
-                                        <ArrowRight className="inline-block" style={{ width: '20px', height: '20px' }} />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="mt-4 space-y-2">
-                                <div className="flex items-center justify-center">
-                                    <span className="text-sm text-gray-400">🔥 47 people registered in the last 24 hours</span>
-                                </div>
-                                <p className="text-xs text-gray-500 text-center">100% Free • No Credit Card Required</p>
-                            </div>
+                            <EverwebinarSliderOptin webinarId={webinarId} />
                         </div>
                     </div>
                 </div>

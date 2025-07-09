@@ -46,6 +46,7 @@ apps/kristinamitrovic/app/api/sokol
 apps/kristinamitrovic/app/api/stripe
 apps/kristinamitrovic/app/api/superadmin
 apps/kristinamitrovic/app/api/webinar
+apps/kristinamitrovic/app/api/everwebinar
 apps/kristinamitrovic/app/admin
 apps/kristinamitrovic/app/dashboard
 apps/kristinamitrovic/app/forgot-password
@@ -67,6 +68,7 @@ apps/vibetoexit/app/api/sokol
 apps/vibetoexit/app/api/stripe
 apps/vibetoexit/app/api/superadmin
 apps/vibetoexit/app/api/webinar
+apps/vibetoexit/app/api/everwebinar
 apps/vibetoexit/app/admin
 apps/vibetoexit/app/dashboard
 apps/vibetoexit/app/forgot-password
