@@ -305,7 +305,7 @@ export function EverwebinarSliderOptin({ webinarId }: EverwebinarSliderOptinProp
                                         <div className="flex-1">
                                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                                                 <div className="flex items-center">
-                                                    <span className="text-base font-medium text-white">
+                                                    <span className="text-sm font-medium text-white sm:text-base">
                                                         {formatWebinarDate(schedule.date, webinarDetails.timezone)}
                                                     </span>
                                                 </div>
