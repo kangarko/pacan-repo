@@ -29,7 +29,7 @@ export const useSokolSession = () => {
 export default function SokolSessionHandler({ children }: { children: ReactNode }) {
     const [cookiesEnabled, setCookiesEnabled] = useState<boolean | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
-    const [userId, setUserId] = useState<string | null>(Cookies.get('user_id') || null);
+    const [userId, setUserId] = useState<string | null>(null);
     const [pixelLoaded, setPixelLoaded] = useState(false);
     const pathname = usePathname();
 
@@ -82,35 +82,44 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
                 sendClientErrorEmail('Failed to initialize headline:', error);
             }
             
-            // Initialize user session
+            // Then, initialize user session
             let currentUserId = Cookies.get('user_id');
 
-            if (!currentUserId || currentUserId === '1') {
-                try {
-                    const sokolId = searchParams.get('sokol');
-                    const response = await fetchJsonPost('/api/sokol/init', { sokol_id: sokolId });
-                    
-                    if (response.userId) {
-                        currentUserId = String(response.userId);
-                        Cookies.set('user_id', currentUserId, {
-                            path: '/',
-                            expires: 365 * 2, // 2 years
-                            sameSite: 'lax',
-                            secure: process.env.NODE_ENV === 'production',
-                        });
-                        setUserId(currentUserId);
-                    }
-                } catch (error) {
-                    console.error('Failed to initialize Sokol session:', error);
-                }
-            } else {
+            if (currentUserId && currentUserId !== '1') {
                 setUserId(currentUserId);
+                setIsInitialized(true);
+                return;
             }
-            setIsInitialized(true);
+
+            try {
+                const sokolId = searchParams.get('sokol');
+                const response = await fetchJsonPost('/api/sokol/init', { sokol_id: sokolId });
+                
+                if (response.userId) {
+                    currentUserId = String(response.userId);
+                
+                    Cookies.set('user_id', currentUserId, {
+                        path: '/',
+                        expires: 365 * 2, // 2 years
+                        sameSite: 'lax',
+                        secure: process.env.NODE_ENV === 'production',
+                    });
+                
+                    setUserId(currentUserId);
+                    setIsInitialized(true);
+                
+                } else 
+                    throw new Error('Sokol initialization failed: No userId returned from API.');
+                
+            } catch (error) {
+                sendClientErrorEmail('Failed to initialize Sokol session:', error);
+            }
         };
 
-        initializeSokolSession();
-    }, []);
+        if (cookiesEnabled) {
+            initializeSokolSession();
+        }
+    }, [cookiesEnabled]);
 
     // Track page views when pixel is loaded
     useEffect(() => {
@@ -163,20 +172,22 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
         );
     }
 
+    if (!isInitialized) {
+        return null;
+    }
+
     return (
         <SokolSessionContext.Provider value={value}>
             {children}
-            {isInitialized && (
-                 <div>
-                    <Script
-                        id="fb-pixel"
-                        src="/scripts/pixel.js"
-                        strategy="afterInteractive"
-                        onLoad={() => setPixelLoaded(true)}
-                        data-pixel-id={process.env.NEXT_PUBLIC_FB_PIXEL_ID}
-                    />
-                </div>
-            )}
+            <div>
+                <Script
+                    id="fb-pixel"
+                    src="/scripts/pixel.js"
+                    strategy="afterInteractive"
+                    onLoad={() => setPixelLoaded(true)}
+                    data-pixel-id={process.env.NEXT_PUBLIC_FB_PIXEL_ID}
+                />
+            </div>
         </SokolSessionContext.Provider>
     );
 } 
