@@ -66,7 +66,7 @@ const ChallengeRegistration = () => {
                             The Step-by-Step Vibe Coding Playbook
                         </span>
                         <span className="block mt-4 lg:mt-2 lg:text-5xl text-white/90 font-semibold">
-                            to Grow Your SaaS to <span className="text-green-400 font-extrabold">$10k/mo</span> Even If You're <span className="underline decoration-pink-400 decoration-2 underline-offset-4">Starting From Zero</span>
+                            to Grow Your SaaS to <span className="text-green-400 font-extrabold">$10k/mo</span> Even If You&apos;re <span className="underline decoration-pink-400 decoration-2 underline-offset-4">Starting From Zero</span>
                         </span>
                     </h1>
                     <p className="text-xl text-gray-300 mx-auto">
