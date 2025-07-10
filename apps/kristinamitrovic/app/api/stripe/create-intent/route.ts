@@ -4,9 +4,8 @@ import { cookies } from 'next/headers';
 import { getPricing } from '@repo/ui/lib/utils';
 import { Offer } from '@repo/ui/lib/types';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export const POST = createPostHandler(async (body) => {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     const { name, email, region, primary_offer_slug, secondary_offer_slug } = body;
     validateRequestBody(body, ['name', 'email', 'region', 'primary_offer_slug']);
 

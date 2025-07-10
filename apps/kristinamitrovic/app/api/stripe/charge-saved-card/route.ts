@@ -2,9 +2,8 @@ import Stripe from 'stripe';
 import { getBaseUrl } from '@repo/ui/lib/utils';
 import { createSupabaseServerClient, sendServerErrorEmail, createPostHandler, validateRequestBody, createErrorResponse, createSuccessResponse } from '@repo/ui/lib/serverUtils';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export const POST = createPostHandler(async (body, request) => {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     const { client_secret, customer_id } = body;
     validateRequestBody(body, ['client_secret', 'customer_id']);
 

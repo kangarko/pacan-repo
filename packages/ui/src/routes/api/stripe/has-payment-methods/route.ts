@@ -1,9 +1,8 @@
 import Stripe from 'stripe';
 import { createSupabaseAdminClient, createSupabaseServerClient, getPurchasesByEmail, createPostHandler, createSuccessResponse } from '@repo/ui/lib/serverUtils';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export const POST = createPostHandler(async () => {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
 
