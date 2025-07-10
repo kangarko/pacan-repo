@@ -91,6 +91,29 @@ function FacebookIntegrationSubTab() {
     const hasLoadedAccounts = React.useRef(false);
     const loadedCacheForAccount = React.useRef<string | null>(null);
 
+    const handleFacebookApiError = useCallback(async (error: unknown, defaultErrorMessage: string) => {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        if (errorMessage.includes('"code":190')) {
+            setError('Your Facebook connection has expired. Please reconnect.');
+            try {
+                await fetchJsonPost('/api/admin/facebook', { action: 'disconnect' });
+                setConnectedAccount(null);
+                setSelectedAdAccount('');
+                setAdAccounts([]);
+                setCachedData(null);
+                setSaveSuccess(false);
+                setPromotablePages([]);
+                setSelectedPageId('');
+            } catch (disconnectErr) {
+                sendClientErrorEmail('Error auto-disconnecting from Facebook:', disconnectErr);
+                setError('Your Facebook connection has expired. We failed to disconnect you automatically. Please try disconnecting manually.');
+            }
+        } else {
+            sendClientErrorEmail(`A Facebook API error occurred: ${defaultErrorMessage}`, error);
+            setError(errorMessage || defaultErrorMessage);
+        }
+    }, []);
+
     const fetchAdAccounts = useCallback(async (forceRefresh = false) => {
         if (isFetchingAccounts)
             return;
@@ -142,15 +165,12 @@ function FacebookIntegrationSubTab() {
             }
 
         } catch (err) {
-            sendClientErrorEmail('Error fetching ad accounts:', err);
-
-            setError(err instanceof Error ? err.message : 'Failed to fetch ad accounts');
-
+            await handleFacebookApiError(err, 'Failed to fetch ad accounts');
         } finally {
             setIsFetchingAccounts(false);
         }
 
-    }, [isFetchingAccounts, selectedAdAccount]);
+    }, [isFetchingAccounts, selectedAdAccount, handleFacebookApiError]);
 
     const loadAdAccountsFromCache = () => {
         const cachedData = localStorage.getItem('facebook_ad_accounts');
@@ -225,10 +245,7 @@ function FacebookIntegrationSubTab() {
             await fetchFacebookCache();
 
         } catch (err) {
-            sendClientErrorEmail('Error refreshing Facebook data:', err);
-
-            setError(err instanceof Error ? err.message : 'Failed to refresh Facebook data');
-
+            await handleFacebookApiError(err, 'Failed to refresh Facebook data');
         } finally {
             setIsFetchingCache(false);
         }
@@ -363,8 +380,7 @@ function FacebookIntegrationSubTab() {
             setError(null);
 
         } catch (err) {
-            sendClientErrorEmail('Error saving ad account:', err);
-            setError(err instanceof Error ? err.message : 'Failed to save ad account');
+            await handleFacebookApiError(err, 'Failed to save ad account');
             setPromotablePages([]);
 
         } finally {
@@ -400,8 +416,7 @@ function FacebookIntegrationSubTab() {
             setPromotablePages([]);
 
         } catch (err) {
-            sendClientErrorEmail('Error saving Facebook page:', err);
-            setError(err instanceof Error ? err.message : 'Failed to save Facebook page');
+            await handleFacebookApiError(err, 'Failed to save Facebook page');
         } finally {
             setIsSavingPage(false);
         }

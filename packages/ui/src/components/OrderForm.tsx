@@ -515,7 +515,7 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                 Cookies.set('lead_name', fullName, { expires: 365 });
                 Cookies.set('lead_email', trimmedEmail, { expires: 365 });
                 
-                track('sign_up', {
+                await track('sign_up', {
                     name: fullName,
                     email: trimmedEmail,
                     region: userContext.region,

@@ -153,9 +153,14 @@ export function SalesDataTab() {
             setData(fetchedData);
 
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unknown error occurred');
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            if (errorMessage.includes('"code":190') || errorMessage.includes('OAuthException')) {
+                setError('Your Facebook connection has expired. Please go to the Integrations page to reconnect.');
+            } else {
+                setError(errorMessage);
+                sendClientErrorEmail('Error during sales data fetch:', err);
+            }
             setData(null);
-            sendClientErrorEmail('Error during sales data fetch:', err);
 
         } finally {
             setLoading(false);
