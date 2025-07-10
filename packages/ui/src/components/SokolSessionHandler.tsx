@@ -3,7 +3,7 @@
 import { useEffect, useState, createContext, ReactNode, useContext } from 'react';
 import Cookies from 'js-cookie';
 import { fetchJsonPost } from '@repo/ui/lib/utils';
-import { track } from '@repo/ui/lib/clientUtils';
+import { sendClientErrorEmail, track } from '@repo/ui/lib/clientUtils';
 import { usePathname } from 'next/navigation';
 import Script from 'next/script';
 import { AlertTriangle } from 'lucide-react';
@@ -79,10 +79,10 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
                     throw new Error('Response from headline API is not valid. Got: ' + JSON.stringify(headlineResponse));
 
             } catch (error) {
-                console.error('Failed to initialize headline:', error);
+                sendClientErrorEmail('Failed to initialize headline:', error);
             }
             
-            // Then, initialize user session
+            // Initialize user session
             let currentUserId = Cookies.get('user_id');
 
             if (!currentUserId || currentUserId === '1') {
