@@ -61,11 +61,11 @@ const ChallengeRegistration = () => {
             {/* Hero Section - Redesigned */}
             <section className="container mx-auto px-4 pt-8 pb-8 md:pt-12 md:pb-6">
                 <div className="text-center mb-8 lg:mb-12 relative z-10 max-w-6xl mx-auto">
-                    <h1 className="relative text-3xl font-extrabold leading-tight mb-6 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+                    <h1 className="relative text-2xl font-extrabold leading-tight mb-6 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
                         <span className="block lg:inline-flex lg:items-baseline lg:gap-x-4">
                             The Step-by-Step Vibe Coding Playbook
                         </span>
-                        <span className="block mt-4 lg:mt-2 lg:text-5xl text-white/90 font-semibold">
+                        <span className="block mt-4 lg:mt-2 lg:text-4xl text-white/90 font-semibold">
                             to Grow Your SaaS to <span className="text-green-400 font-extrabold">$10k/mo</span> Even If You&apos;re <span className="underline decoration-pink-400 decoration-2 underline-offset-4">Starting From Zero</span>
                         </span>
                     </h1>
@@ -545,7 +545,7 @@ const ChallengeRegistration = () => {
 
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="max-w-4xl mx-auto">
-                        <div className="bg-gradient-to-br from-indigo-900/50 via-purple-900/30 to-indigo-900/50 backdrop-blur-xl rounded-3xl p-12 md:p-16 text-center shadow-2xl border border-indigo-500/20 relative overflow-hidden">
+                        <div className="bg-gradient-to-br from-indigo-900/50 via-purple-900/30 to-indigo-900/50 backdrop-blur-xl rounded-3xl p-8 md:p-12 text-center shadow-2xl border border-indigo-500/20 relative overflow-hidden">
                             {/* Subtle grid overlay */}
                             <div className="absolute inset-0 opacity-10">
                                 <Sparkles className="absolute top-10 left-10 text-indigo-400 h-8 w-8 animate-pulse" />
