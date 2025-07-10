@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Plus, Edit2, Trash2, BarChart, Check, X, TrendingUp, Eye, UserPlus, ShoppingCart, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
 import { fetchJsonPost, stripAccentTags } from '@repo/ui/lib/utils';
 import { sendClientErrorEmail } from '@repo/ui/lib/clientUtils';
@@ -16,6 +16,9 @@ interface HeadlineStats {
     signupRate: number;
     purchaseRate: number;
 }
+
+type SortableHeadlineStatsKey = keyof Omit<HeadlineStats, 'headline'>;
+
 
 interface HeadlinesTabProps {
     userRole?: string | null;
@@ -527,6 +530,7 @@ function HeadlineStatsSubTab() {
         return new Date().toISOString().split('T')[0];
     });
     const [dateError, setDateError] = useState<string | null>(null);
+    const [sortConfig, setSortConfig] = useState<{ key: SortableHeadlineStatsKey; direction: 'ascending' | 'descending' }>({ key: 'views', direction: 'descending' });
     const [url, setUrl] = useState<string>(() => {
         
         if (!process.env.NEXT_PUBLIC_DOMAIN)
@@ -534,6 +538,30 @@ function HeadlineStatsSubTab() {
 
         return process.env.NEXT_PUBLIC_DOMAIN == 'kristinamitrovic.com' ? '/knjiga' : '/';
     });
+
+    const requestSort = (key: SortableHeadlineStatsKey) => {
+        let direction: 'ascending' | 'descending' = 'descending';
+        if (sortConfig.key === key) {
+            direction = sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const sortedStats = useMemo(() => {
+        const sortableItems = [...stats];
+        if (sortConfig.key) {
+            sortableItems.sort((a, b) => {
+                if (a[sortConfig.key] < b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                }
+                if (a[sortConfig.key] > b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return sortableItems;
+    }, [stats, sortConfig]);
 
     const handleDateRangeSelect = (range: string) => {
         const today = new Date();
@@ -737,6 +765,14 @@ function HeadlineStatsSubTab() {
         );
     };
 
+    const getSortIcon = (key: SortableHeadlineStatsKey) => {
+        if (sortConfig.key !== key) return null;
+        if (sortConfig.direction === 'ascending') {
+            return <ChevronUp className="w-4 h-4 inline-block ml-1" />;
+        }
+        return <ChevronDown className="w-4 h-4 inline-block ml-1" />;
+    };
+
     return (
         <>
             <h3 className="text-xl font-semibold text-white mb-6">Headline Performance Statistics</h3>
@@ -901,28 +937,48 @@ function HeadlineStatsSubTab() {
                                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                                             Headline
                                         </th>
-                                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer select-none"
+                                            onClick={() => requestSort('views')}
+                                        >
                                             <Eye className="w-4 h-4 inline-block mr-1" />
                                             Views
+                                            {getSortIcon('views')}
                                         </th>
-                                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer select-none"
+                                            onClick={() => requestSort('signups')}
+                                        >
                                             <UserPlus className="w-4 h-4 inline-block mr-1" />
                                             Signups
+                                            {getSortIcon('signups')}
                                         </th>
-                                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer select-none"
+                                            onClick={() => requestSort('signupRate')}
+                                        >
                                             Signup Rate
+                                            {getSortIcon('signupRate')}
                                         </th>
-                                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer select-none"
+                                            onClick={() => requestSort('purchases')}
+                                        >
                                             <ShoppingCart className="w-4 h-4 inline-block mr-1" />
                                             Purchases
+                                            {getSortIcon('purchases')}
                                         </th>
-                                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                        <th
+                                            className="px-4 py-3 text-center text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer select-none"
+                                            onClick={() => requestSort('purchaseRate')}
+                                        >
                                             Purchase Rate
+                                            {getSortIcon('purchaseRate')}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-neutral-800">
-                                    {stats.map((stat) => (
+                                    {sortedStats.map((stat) => (
                                         <tr key={stat.headline.id} className={stat.headline.id === 'no_headline' ? 'bg-neutral-800/50' : ''}>
                                             <td className="px-4 py-3 text-white">
                                                 <div>

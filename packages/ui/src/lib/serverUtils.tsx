@@ -236,10 +236,10 @@ export async function verifyAdminUser() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user)
-        throw new Error('Unauthorized: Not authenticated');
+        throw new Error('Unauthorized: You are not logged in, please log in to continue.');
 
     if (user.user_metadata.role !== 'admin')
-        throw new Error('Unauthorized: Not an admin');
+        throw new Error('Unauthorized: You are not an admin, please contact support if you believe this is an error.');
 }
 
 /**
@@ -252,10 +252,10 @@ export async function verifyAdminOrMarketerUser() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user)
-        throw new Error('Unauthorized: Not authenticated');
+        throw new Error('Unauthorized: You are not logged in, please log in to continue.');
 
     if (user.user_metadata.role !== 'admin' && user.user_metadata.role !== 'marketer')
-        throw new Error('Unauthorized: Not an admin or marketer');
+        throw new Error('Unauthorized: You are not an admin or marketer, please contact support if you believe this is an error.');
 
     return user;
 }

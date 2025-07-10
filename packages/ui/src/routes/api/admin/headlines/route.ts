@@ -1,6 +1,6 @@
 import { createPostHandler, createSuccessResponse, createErrorResponse, createSupabaseAdminClient, verifyAdminOrMarketerUser, validateRequestBody } from '@repo/ui/lib/serverUtils';
-import { Headline } from '@repo/ui/lib/types';
-import { getNormalizedUrl } from '@repo/ui/lib/utils';
+import { Headline, Tracking } from '@repo/ui/lib/types';
+import { fetchMultiPageData, getNormalizedUrl } from '@repo/ui/lib/utils';
 
 export const POST = createPostHandler(async (body) => {
     const { action } = body;
@@ -11,7 +11,7 @@ export const POST = createPostHandler(async (body) => {
     switch (action) {
         case 'list': {
             await verifyAdminOrMarketerUser();
-            
+
             const { data: headlines, error } = await adminClient
                 .from('headlines')
                 .select('*')
@@ -28,7 +28,7 @@ export const POST = createPostHandler(async (body) => {
         case 'create': {
             await verifyAdminOrMarketerUser();
             validateRequestBody(body, ['name', 'headline', 'bullet_points']);
-            
+
             const { name, headline, subheadline, bullet_points, slug } = body;
 
             // Validate bullet points structure
@@ -42,7 +42,7 @@ export const POST = createPostHandler(async (body) => {
 
             // Generate slug from name if not provided
             const finalSlug = slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-            
+
             // Validate slug format
             if (!/^[a-z0-9-]+$/.test(finalSlug))
                 return createErrorResponse('Slug must contain only lowercase letters, numbers, and hyphens');
@@ -73,11 +73,11 @@ export const POST = createPostHandler(async (body) => {
         case 'update': {
             await verifyAdminOrMarketerUser();
             validateRequestBody(body, ['id']);
-            
+
             const { id, name, slug, headline, subheadline, bullet_points, active } = body;
 
             const updateData: any = {};
-            
+
             if (name !== undefined) updateData.name = name;
             if (slug !== undefined) {
                 // Validate slug format
@@ -123,9 +123,9 @@ export const POST = createPostHandler(async (body) => {
             const user = await verifyAdminOrMarketerUser();
             if (user.user_metadata.role !== 'admin')
                 return createErrorResponse('Only administrators can delete headlines');
-                
+
             validateRequestBody(body, ['id']);
-            
+
             const { id } = body;
 
             const { error } = await adminClient
@@ -143,7 +143,7 @@ export const POST = createPostHandler(async (body) => {
 
         case 'get_active': {
             await verifyAdminOrMarketerUser();
-            
+
             const { data: headlines, error } = await adminClient
                 .from('headlines')
                 .select('*')
@@ -161,7 +161,7 @@ export const POST = createPostHandler(async (body) => {
         case 'get_stats': {
             await verifyAdminOrMarketerUser();
             validateRequestBody(body, ['start_date', 'end_date']);
-            
+
             const { start_date, end_date, url } = body;
 
             // Validate URL parameter
@@ -173,10 +173,10 @@ export const POST = createPostHandler(async (body) => {
             // Validate dates - parse as local dates to avoid timezone issues
             const [startYear, startMonth, startDay] = start_date.split('-').map(Number);
             const [endYear, endMonth, endDay] = end_date.split('-').map(Number);
-            
+
             const startDate = new Date(startYear, startMonth - 1, startDay, 0, 0, 0, 0);
             const endDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
-            
+
             if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()))
                 return createErrorResponse('Invalid date format');
 
@@ -193,15 +193,16 @@ export const POST = createPostHandler(async (body) => {
                 throw headlinesError;
 
             // Get tracking data for the date range - filter views by URL
-            const { data: trackingData, error: trackingError } = await adminClient
-                .from('tracking')
-                .select('type, metadata, email, date, url')
-                .gte('date', startDate.toISOString())
-                .lte('date', endDate.toISOString())
-                .in('type', ['view', 'sign_up', 'buy']);
+            const trackingData = await fetchMultiPageData<Tracking>(
+                adminClient
+                    .from('tracking')
+                    .select('type, metadata, email, date, url')
+                    .gte('date', startDate.toISOString())
+                    .lte('date', endDate.toISOString())
+                    .in('type', ['view', 'sign_up', 'buy'])
+            );
 
-            if (trackingError)
-                throw trackingError;
+            console.log(`Found ${trackingData.length} tracking rows`);
 
             // Calculate stats for each headline
             const stats: Record<string, {
@@ -247,7 +248,7 @@ export const POST = createPostHandler(async (body) => {
             // Process tracking data
             for (const row of trackingData || []) {
                 const headlineId = row.metadata?.headline_id || 'no_headline';
-                
+
                 if (stats[headlineId]) {
                     if (row.type === 'view' && row.url === normalizedUrl) {
                         // Only count views that match the specified URL
