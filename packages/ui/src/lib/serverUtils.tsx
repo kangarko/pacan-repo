@@ -720,7 +720,7 @@ export async function trackServer(request: Request, eventType: EventType, data: 
         if (headlineId)
             metadata.headline_id = headlineId;
         else
-            sendServerErrorEmail(null, request, 'No headline_id found in cookies', new Error('No headline_id found in cookies'));
+            sendServerErrorEmail(null, request, '[Warning] No headline_id found in cookies while tracking ' + eventType, new Error('[Warning] No headline_id found in cookies while tracking ' + eventType));
 
         const trackingData = {
             date: date,

@@ -39,11 +39,11 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
             // Try to set a test cookie
             document.cookie = 'cookietest=1; SameSite=Lax';
             const cookiesWork = document.cookie.includes('cookietest=1');
-            
+
             // Clean up test cookie
             if (cookiesWork)
                 document.cookie = 'cookietest=1; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            
+
             setCookiesEnabled(cookiesWork);
         } catch {
             setCookiesEnabled(false);
@@ -52,73 +52,56 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
 
     useEffect(() => {
         const initializeSokolSession = async () => {
-            const searchParams = new URLSearchParams(window.location.search);
-            
-            // First, fetch and set up headline
             try {
+                const searchParams = new URLSearchParams(window.location.search);
+
+                const sokolId = searchParams.get('sokol');
                 const headlineSlug = searchParams.get('hd');
-                const headlineResponse = await fetchJsonPost('/api/headlines/active', {
-                    slug: headlineSlug || undefined
+
+                const response = await fetchJsonPost('/api/sokol/init', {
+                    sokol_id: sokolId,
+                    headline_slug: headlineSlug,
                 });
 
-                if (headlineResponse?.headline === false)
-                    localStorage.setItem('active_headline', 'false');
-                
-                else if (headlineResponse.headline) {
-                    // Save entire headline object to localStorage
-                    localStorage.setItem('active_headline', JSON.stringify(headlineResponse.headline));
-                
-                    Cookies.set('headline_id', headlineResponse.headline.id, {
+                console.log('sokol/init returned', response);
+
+                if (response.headline) {
+                    Cookies.set('headline_id', response.headline.id, {
                         path: '/',
                         expires: 30, // 30 days
                         sameSite: 'lax',
                         secure: process.env.NODE_ENV === 'production',
                     });
 
-                } else 
-                    throw new Error('Response from headline API is not valid. Got: ' + JSON.stringify(headlineResponse));
-
-            } catch (error) {
-                sendClientErrorEmail('Failed to initialize headline:', error);
-            }
-            
-            // Then, initialize user session
-            let currentUserId = Cookies.get('user_id');
-
-            if (currentUserId && currentUserId !== '1') {
-                setUserId(currentUserId);
-                setIsInitialized(true);
-                return;
-            }
-
-            try {
-                const sokolId = searchParams.get('sokol');
-                const response = await fetchJsonPost('/api/sokol/init', { sokol_id: sokolId });
-                
-                if (response.userId) {
-                    currentUserId = String(response.userId);
-                
-                    Cookies.set('user_id', currentUserId, {
+                    Cookies.set('active_headline', JSON.stringify(response.headline), {
                         path: '/',
-                        expires: 365 * 2, // 2 years
+                        expires: 30, // 30 days
                         sameSite: 'lax',
                         secure: process.env.NODE_ENV === 'production',
                     });
-                
-                    setUserId(currentUserId);
-                    setIsInitialized(true);
-                
-                } else 
-                    throw new Error('Sokol initialization failed: No userId returned from API.');
-                
+                }
+
+                if (!response.user_id)
+                    throw new Error('No user id returned from sokol/init.');
+
+                Cookies.set('user_id', response.user_id, {
+                    path: '/',
+                    expires: 365 * 2, // 2 years
+                    sameSite: 'lax',
+                    secure: process.env.NODE_ENV === 'production',
+                });
+
+                setUserId(response.user_id);
+                setIsInitialized(true);
+
             } catch (error) {
-                sendClientErrorEmail('Failed to initialize Sokol session:', error);
+                sendClientErrorEmail('Error in sokol/init:', error);
             }
         };
 
-        if (cookiesEnabled) {
+        if (cookiesEnabled)
             initializeSokolSession();
-        }
+
     }, [cookiesEnabled]);
 
     // Track page views when pixel is loaded
@@ -147,7 +130,7 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
                         Kolačići su onemogućeni
                     </h1>
                     <p className="text-gray-600 mb-6">
-                        Ova stranica zahtijeva omogućene kolačiće (cookies) za pravilno funkcioniranje. 
+                        Ova stranica zahtijeva omogućene kolačiće (cookies) za pravilno funkcioniranje.
                         Molimo vas da omogućite kolačiće u postavkama vašeg preglednika i osvježite stranicu.
                     </p>
                     <div className="bg-gray-50 p-4 rounded-md text-left">
@@ -161,8 +144,8 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
                             <li>• Edge: Postavke → Kolačići i dozvole stranice</li>
                         </ul>
                     </div>
-                    <button 
-                        onClick={() => window.location.reload()} 
+                    <button
+                        onClick={() => window.location.reload()}
                         className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
                     >
                         Osvježi stranicu

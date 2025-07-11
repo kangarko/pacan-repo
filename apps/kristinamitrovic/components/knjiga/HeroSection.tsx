@@ -12,6 +12,7 @@ import { Offer } from '@repo/ui/lib/types';
 import { getIconByName } from '@repo/ui/lib/iconMapping';
 import { sendClientErrorEmail } from '@repo/ui/lib/clientUtils';
 import { useSokolSession } from '@repo/ui/components/SokolSessionHandler';
+import Cookies from 'js-cookie';
 
 // Add countdown component
 const CountdownTimer = React.memo(() => {
@@ -116,19 +117,13 @@ const HeroSection = ({ primaryOffer, secondaryOffer, userContext, isLoading: pag
             return;
 
         try {
-            const storedHeadline = localStorage.getItem('active_headline');
+            const storedHeadline = Cookies.get('active_headline');
 
-            if (storedHeadline === 'false')
-                setHeadline(null);
-
-            else if (storedHeadline)
+            if (storedHeadline)
                 setHeadline(JSON.parse(storedHeadline));
 
-            else
-                throw new Error("No headline found in localStorage");
-
         } catch (error) {
-            sendClientErrorEmail("Error reading headline from localStorage", error);
+            sendClientErrorEmail("Error reading headline from cookies", error);
 
         } finally {
             setHeadlineLoading(false);
