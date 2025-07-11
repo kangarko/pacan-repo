@@ -462,16 +462,18 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
         }
 
         const trimmedName = name.trim();
-        const trimmedEmail = email.trim().charAt(0).toLowerCase() + email.trim().slice(1);
 
-        if (!trimmedEmail || !trimmedEmail.includes('@')) {
-            setError('Vaša adresa e-pošte nije ispravno formatirana');
+        // Expanded validation for name
+        if (!/^[\p{L}\s'.-]+$/u.test(trimmedName)) {
+            setError('Ime smije sadržavati samo slova, razmake, točke, crtice i apostrofe.');
             setIsSubmitting(false);
-
             return;
         }
+        
+        const trimmedEmail = email.trim().toLowerCase();
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+        // Stricter email validation regex
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(trimmedEmail)) {
             setError('Vaša adresa e-pošte nije ispravno formatirana.');
             setIsSubmitting(false);
 
@@ -930,7 +932,7 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                         currency: 'EUR',
                                                                         primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                                                                         secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
-                                                                        payment_id: data.paymentID,
+                                                                        payment_id: data.orderID,
                                                                         order_id: data.orderID,
                                                                         payer_id: data.payerID
                                                                     });

@@ -20,11 +20,13 @@ export default function HomePage() {
         const getPosts = async () => {
             try {
                 const data = await fetchJsonGet('/api/blog/latest');
-                if (data.posts) {
+                
+                if (data.posts) 
                     setLatestPosts(data.posts);
-                }
+                
             } catch (err) {
                 sendClientErrorEmail('Failed to fetch latest posts', err);
+                
             } finally {
                 setPostsLoading(false);
             }

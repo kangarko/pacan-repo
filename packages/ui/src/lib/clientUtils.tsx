@@ -203,7 +203,7 @@ export async function sendClientErrorEmail(message: string, errorUnknown: unknow
         const errorContent = combinedMessage + (error.stack ? error.stack.split('\n')[0] : '');
         const errorHash = await hashString(errorContent);
         
-        await sendClientEmail(EmailTemplate.ADMIN_ERROR, {
+        const emailData: Record<string, any> = {
             message: combinedMessage,
             stack: error && error.stack ? error.stack : 'No stack trace',
             url: window ? window.location.href : '',
@@ -214,7 +214,27 @@ export async function sendClientErrorEmail(message: string, errorUnknown: unknow
             user_agent: navigator.userAgent || '',
             get_params: window ? new URLSearchParams(window.location.search).toString() : '',
             error_hash: errorHash.substring(0, 16),
-        });
+        };
+
+        if (errorUnknown) {
+            emailData.error_type = typeof errorUnknown;
+            
+            if (typeof errorUnknown === 'object' && errorUnknown !== null) {
+                try {
+                    emailData.error_keys = Object.keys(errorUnknown);
+                } catch (e) {
+                    emailData.error_keys = ["Failed to get keys"];
+                }
+                
+                try {
+                    emailData.error_string = String(errorUnknown);
+                } catch (e) {
+                    emailData.error_string = "Failed to stringify error";
+                }
+            }
+        }
+
+        await sendClientEmail(EmailTemplate.ADMIN_ERROR, emailData);
 
     } catch (sendError) {
         console.error('Error sending error notification:', sendError);
