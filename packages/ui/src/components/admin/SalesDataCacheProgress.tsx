@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from 'react';
 import { fetchJsonPost } from '@repo/ui/lib/utils';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
 
 interface CacheProgressProps {
     startDate: string;
@@ -82,10 +83,17 @@ export function SalesDataCacheProgress({ startDate, endDate, onCacheComplete }: 
             }
         } catch (error) {
             console.error('Error warming cache:', error);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            let displayError = `Cache warming failed: ${errorMessage}`;
+
+            if (errorMessage.includes("Facebook account is not connected")) {
+                displayError = "Facebook account is not connected. Please go to the Integrations page to connect it.";
+            }
+
             setWarmingProgress({
                 newly_cached_days: 0,
                 failed_days: cacheStatus?.missing_days || 0,
-                errors: ['Cache warming failed: ' + (error as Error).message]
+                errors: [displayError]
             });
         } finally {
             setIsWarming(false);
@@ -162,7 +170,14 @@ export function SalesDataCacheProgress({ startDate, endDate, onCacheComplete }: 
                                 <p className="text-red-400 font-medium">Cache warming completed with errors</p>
                                 <ul className="text-gray-400 mt-1 space-y-1">
                                     {warmingProgress.errors.map((error, idx) => (
-                                        <li key={idx} className="text-xs">{error}</li>
+                                        <li key={idx} className="text-xs">
+                                            {error}
+                                            {error.includes("Facebook account is not connected") && (
+                                                <Link href="/admin/integrations" className="text-indigo-400 hover:underline ml-2 font-semibold">
+                                                    Go to Integrations
+                                                </Link>
+                                            )}
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
