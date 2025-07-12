@@ -33,12 +33,12 @@ export default function LoginPage() {
 
             if (errorParam) {
                 const errorMessages: Record<string, string> = {
-                    'invalid_session': 'Vaša sesija je istekla ili je nevažeća. Molimo prijavite se ponovno.',
-                    'session_error': 'Došlo je do problema s Vašom prijavom. Molimo prijavite se ponovno.',
-                    'unauthorized': 'Nemate dozvolu za pristup ovoj stranici. Molimo prijavite se ponovno.'
+                    'invalid_session': 'Your session has expired or is invalid. Please log in again.',
+                    'session_error': 'There was a problem with your login. Please log in again.',
+                    'unauthorized': 'You do not have permission to access this page. Please log in again.'
                 };
 
-                setError(errorMessages[errorParam] || 'Došlo je do problema s Vašom prijavom.');
+                setError(errorMessages[errorParam] || 'There was a problem with your login.');
             }
 
             const { data: { user } } = await supabase.auth.getUser();
@@ -85,20 +85,20 @@ export default function LoginPage() {
             }
 
         } catch (error) {
-            // Translate common Supabase auth error messages to Croatian
-            let errorMessage = 'Došlo je do greške prilikom prijave, pokušajte molimo ponovno';
+            // Translate common Supabase auth error messages
+            let errorMessage = 'An error occurred while logging in, please try again';
 
             if (error instanceof Error) {
-                // Map known error messages to Croatian translations
+                // Map known error messages
                 const errorTranslations: Record<string, string> = {
-                    'Invalid login credentials': 'Neispravni podaci za prijavu',
-                    'Email not confirmed': 'E-mail adresa nije potvrđena, provjerite svoj e-mail za potvrdu',
-                    'Invalid email or password': 'Neispravna e-mail adresa ili lozinka',
-                    'User not found': 'Korisnik nije pronađen',
-                    'Email rate limit exceeded': 'Previše pokušaja, pokušajte kasnije',
-                    'Password recovery email not sent': 'E-mail za oporavak lozinke nije poslan',
-                    'Rate limit exceeded': 'Previše pokušaja, pokušajte kasnije',
-                    'Server error': 'Greška na serveru, pokušajte molimo ponovno'
+                    'Invalid login credentials': 'Invalid login credentials',
+                    'Email not confirmed': 'Email not confirmed, please check your email for confirmation',
+                    'Invalid email or password': 'Invalid email or password',
+                    'User not found': 'User not found',
+                    'Email rate limit exceeded': 'Too many attempts, please try again later',
+                    'Password recovery email not sent': 'Password recovery email not sent',
+                    'Rate limit exceeded': 'Too many attempts, please try again later',
+                    'Server error': 'Server error, please try again'
                 };
 
                 // Use translation if available, otherwise use generic error
@@ -107,7 +107,7 @@ export default function LoginPage() {
 
             setError(errorMessage);
 
-            if (errorMessage !== 'Neispravna e-mail adresa ili lozinka' && errorMessage !== 'Neispravni podaci za prijavu' && errorMessage !== 'Failed to fetch')
+            if (errorMessage !== 'Invalid email or password' && errorMessage !== 'Invalid login credentials' && errorMessage !== 'Failed to fetch')
                 sendClientErrorEmail('Error signing in:', error);
 
         } finally {
@@ -137,10 +137,10 @@ export default function LoginPage() {
                                 <Lock className="w-8 h-8 text-[#6B498F]" />
                             </div>
                             <h1 className="text-3xl font-bold text-[#4b2c5e] mb-4">
-                                Prijavite se
+                                Sign In
                             </h1>
                             <p className="text-[#4b2c5e]/80">
-                                Dobrodošli natrag! Prijavite se na svoj račun
+                                Welcome back! Please sign in to your account
                             </p>
                             {/* Back button */}
                             <Link
@@ -148,7 +148,7 @@ export default function LoginPage() {
                                 className="inline-flex mt-2 items-center w-full text-center justify-center text-[#6B498F] hover:text-[#4b2c5e] transition-colors mb-8"
                             >
                                 <ArrowLeft className="w-4 h-4 mr-1" />
-                                <span>Natrag na početnu</span>
+                                <span>Back to home</span>
                             </Link>
                         </div>
 
@@ -156,7 +156,7 @@ export default function LoginPage() {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div>
                                     <label htmlFor="email" className="block text-sm font-medium text-[#4b2c5e]/80 mb-2">
-                                        E-mail
+                                        Email
                                     </label>
                                     <div className="relative">
                                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6B498F]/70" />
@@ -173,7 +173,7 @@ export default function LoginPage() {
 
                                 <div>
                                     <label htmlFor="password" className="block text-sm font-medium text-[#4b2c5e]/80 mb-2">
-                                        Lozinka
+                                        Password
                                     </label>
                                     <div className="relative">
                                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6B498F]/70" />
@@ -199,7 +199,7 @@ export default function LoginPage() {
                                     disabled={isLoading}
                                     className="w-full bg-[#6B498F] hover:bg-[#4b2c5e] text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    {isLoading ? 'Prijavljivanje...' : 'Prijavite se'}
+                                    {isLoading ? 'Signing in...' : 'Sign In'}
                                 </button>
 
                                 <div className="text-center space-y-4">
@@ -207,11 +207,11 @@ export default function LoginPage() {
                                         href="/forgot-password"
                                         className="block text-sm text-[#6B498F] hover:text-[#4b2c5e] transition-colors"
                                     >
-                                        Zaboravili ste lozinku?
+                                        Forgot your password?
                                     </Link>
 
                                     <p className="text-gray-500 text-xs pt-2">
-                                        Ako imate problema s prijavom, kontaktirajte nas na{' '}
+                                        If you're having trouble logging in, please contact us at{' '}
                                         <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`} className="text-[#6B498F] hover:text-[#4b2c5e]">
                                             {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
                                         </a>
