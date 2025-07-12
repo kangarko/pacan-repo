@@ -112,7 +112,6 @@ const HeroSection = ({ primaryOffer, secondaryOffer, userContext, isLoading: pag
     }, []);
 
     useEffect(() => {
-        // Only read from localStorage after Sokol session has initialized
         if (!isInitialized)
             return;
 
