@@ -6,7 +6,7 @@ import { fetchJsonPost } from '@repo/ui/lib/utils';
 import { safeLocalStorageGet, safeLocalStorageSet, sendClientErrorEmail, track } from '@repo/ui/lib/clientUtils';
 import { usePathname } from 'next/navigation';
 import Script from 'next/script';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
 import { SokolData } from '../lib/types';
 
 const SokolSessionContext = createContext<SokolData | null>(null);
@@ -98,9 +98,14 @@ export default function SokolSessionHandler({ children, lang = 'en' }: { childre
         });
     }, [pathname, pixelLoaded, sokolData]);
 
-    // Show nothing while checking cookies
-    if (cookiesEnabled === null)
-        return null;
+    // Show loading spinner while checking cookies
+    if (cookiesEnabled === null) {
+        return (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black">
+                <div className="animate-spin mx-auto w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full mb-4"></div>
+            </div>
+        );
+    }
 
     // Show error message if cookies are disabled
     if (!cookiesEnabled) {
@@ -175,7 +180,11 @@ export default function SokolSessionHandler({ children, lang = 'en' }: { childre
     }
 
     if (!sokolData)
-        return null;
+        return (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center black">
+                <div className="animate-spin mx-auto w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full mb-4"></div>
+            </div>
+        );
 
     return (
         <SokolSessionContext.Provider value={sokolData}>

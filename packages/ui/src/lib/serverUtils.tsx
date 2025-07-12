@@ -723,8 +723,6 @@ export async function trackServer(request: Request, eventType: EventType, data: 
         else
             sendServerErrorEmail(null, request, '[Warning] No headline_id found while tracking ' + eventType, new Error('[Warning] No headline_id found while tracking ' + eventType));
 
-        console.log("[server/track] User id: " + userId);
-
         const trackingData = {
             date: date,
             type: eventType,
