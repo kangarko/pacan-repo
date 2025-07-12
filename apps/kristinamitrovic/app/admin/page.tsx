@@ -3,14 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Users, Database, FlaskConical, Menu, X, TrendingUp, Package, FileText, Palette, LifeBuoy, PlayCircle, Power, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Users, Database, Menu, X, TrendingUp, Package, FileText, Palette, LifeBuoy, PlayCircle, Power, ChevronLeft, ChevronRight } from 'lucide-react';
 import { createSupabaseClient, safeLocalStorageGet, safeLocalStorageSet } from '@repo/ui/lib/clientUtils';
-import { SupportTab } from '@repo/ui/admin/SupportAdminSection';
 import { UsersTab } from '@repo/ui/admin/UsersAdminSection';
 import { SalesDataTab } from '@repo/ui/admin/SalesDataAdminSection';
 import { IntegrationsTab } from '@repo/ui/admin/IntegrationsAdminSection';
 import { GenerateTab } from '@repo/ui/admin/GenerateAdminSection';
-import { ExperimentsTab } from '@repo/ui/admin/ExperimentsAdminSection';
 import { FormsTab } from '@repo/ui/admin/FormsAdminSection';
 import { WebinarAdminSection } from '@repo/ui/admin/WebinarAdminSection';
 import { OffersAdminSection } from '@repo/ui/admin/OffersAdminSection';
@@ -25,8 +23,8 @@ enum ActiveTab {
     FORMS = 'forms',
     INTEGRATIONS = 'integrations',
     IMAGE_GENERATION = 'image-generation',
-    SUPPORT = 'support',
-    EXPERIMENTS = 'experiments',
+    //SUPPORT = 'support',
+    //EXPERIMENTS = 'experiments',
     WEBINAR = 'webinar',
     OFFERS = 'offers',
     HEADLINES = 'headlines',
@@ -126,8 +124,8 @@ export default function AdminDashboard() {
         { tab: ActiveTab.FORMS, label: 'Forms', icon: <FileText className="w-5 h-5" />, href: '/admin/forms', marketerAccess: true },
         { tab: ActiveTab.INTEGRATIONS, label: 'Integrations', icon: <Database className="w-5 h-5" />, href: '/admin/integrations', marketerAccess: true },
         { tab: ActiveTab.IMAGE_GENERATION, label: 'Generate', icon: <Palette className="w-5 h-5" />, href: '/admin/image-generation', marketerAccess: true },
-        { tab: ActiveTab.SUPPORT, label: 'Support', icon: <LifeBuoy className="w-5 h-5" />, href: '/admin/support', marketerAccess: false },
-        { tab: ActiveTab.EXPERIMENTS, label: 'Experiments', icon: <FlaskConical className="w-5 h-5" />, href: '/admin/experiments', marketerAccess: true },
+        /*{ tab: ActiveTab.SUPPORT, label: 'Support', icon: <LifeBuoy className="w-5 h-5" />, href: '/admin/support', marketerAccess: false },*/
+        /*{ tab: ActiveTab.EXPERIMENTS, label: 'Experiments', icon: <FlaskConical className="w-5 h-5" />, href: '/admin/experiments', marketerAccess: true },*/
         { tab: ActiveTab.WEBINAR, label: 'Webinars', icon: <PlayCircle className="w-5 h-5" />, href: '/admin/webinar', marketerAccess: false },
     ];
 
@@ -255,8 +253,8 @@ export default function AdminDashboard() {
                         {activeTab === ActiveTab.FORMS && <FormsTab />}
                         {activeTab === ActiveTab.INTEGRATIONS && <IntegrationsTab />}
                         {activeTab === ActiveTab.IMAGE_GENERATION && <GenerateTab userRole={userRole} />}
-                        {activeTab === ActiveTab.SUPPORT && <SupportTab />}
-                        {activeTab === ActiveTab.EXPERIMENTS && <ExperimentsTab userRole={userRole} />}
+                        {/*activeTab === ActiveTab.SUPPORT && <SupportTab />*/}
+                        {/*{activeTab === ActiveTab.EXPERIMENTS && <ExperimentsTab userRole={userRole} />}*/}
                         {activeTab === ActiveTab.WEBINAR && <WebinarAdminSection />}
                         {activeTab === ActiveTab.OFFERS && <OffersAdminSection />}
                         {activeTab === ActiveTab.HEADLINES && <HeadlinesTab userRole={userRole} />}
