@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Rocket, CheckCircle } from 'lucide-react';
-import { UserContextData } from '@repo/ui/lib/types';
 
 // Data for social proof
 const names = [
@@ -73,7 +72,7 @@ const formatTimeAgo = (minutes: number) => {
     return `${hours}h ${remainingMinutes}m ago`;
 };
 
-const SocialProofWidget = ({ userContext }: { userContext: UserContextData | null }) => {
+const SocialProofWidget = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [currentProof, setCurrentProof] = useState({ name: '', location: '', action: '', timeAgo: '' });
 

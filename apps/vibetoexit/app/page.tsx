@@ -22,7 +22,7 @@ export default function Home() {
         <div className="min-h-screen bg-gray-900">
             <ChallengeRegistration />
             <ExitPopup userContext={userContext} />
-            <SocialProofWidget userContext={userContext} />
+            <SocialProofWidget />
             {/* <ChatBubble /> */}
         </div>
     );

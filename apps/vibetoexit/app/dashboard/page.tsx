@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Book, User as UserIcon, LogOut, Settings, CreditCard, Receipt, Save, AlertCircle, Check, Code, Briefcase } from 'lucide-react';
+import { User as UserIcon, LogOut, Settings, CreditCard, Receipt, Save, AlertCircle, Check, Code, Briefcase } from 'lucide-react';
 import { UserContextData, Tracking } from '@repo/ui/lib/types';
-import { fetchJsonPost, formatCurrency, formatDate } from '@repo/ui/lib/utils';
+import { formatCurrency, formatDate } from '@repo/ui/lib/utils';
 import { User } from '@supabase/supabase-js';
 import { retrieveData, sendClientErrorEmail } from '@repo/ui/lib/clientUtils';
 import { createSupabaseClient } from '@repo/ui/lib/clientUtils';

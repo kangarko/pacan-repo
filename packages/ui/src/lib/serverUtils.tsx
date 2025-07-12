@@ -592,7 +592,7 @@ export async function trackServer(request: Request, eventType: EventType, data: 
         userId = cookieStore.get('user_id')?.value;
 
     if (!userId)
-        throw new Error('[server/track] No user_id found in params or cookies');
+        throw new Error('[server/track] No user_id found in params or cookies. This is a critical error - user_id MUST be set by SokolSessionHandler before any tracking can occur.');
 
     if (userId == '1')
         throw new Error('[server/track] User ID is 1');
