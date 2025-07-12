@@ -18,18 +18,16 @@ export const POST = createPostHandler(async (body) => {
 
     const cookieUserId = user_id || cookieStore.get('user_id')?.value;
 
-    console.log('=============================================== Old user_id: ' + cookieUserId);
-
     if (cookieUserId && cookieUserId !== '1') {
         userId = cookieUserId;
 
-        console.log("\tUsing user_id from cookie")
+        console.log("Using user_id from before: " + cookieUserId)
     }
 
     if (!userId && sokol_id && sokol_id !== '1') {
         userId = sokol_id;
 
-        console.log("\tUsing user_id from query")
+        console.log("Using user_id from query: " + sokol_id)
     }
 
     if (!userId) {
@@ -41,12 +39,12 @@ export const POST = createPostHandler(async (body) => {
         if (user) {
             email = user.email;
 
-            console.log("\tUsing email from logged in user: " + email)
+            console.log("Using email from logged in user: " + email)
         } else {
             email = cookieStore.get('lead_email')?.value;
 
             if (email)
-                console.log("\tUsing email from lead_email cookie: " + email)
+                console.log("Using email from lead_email cookie: " + email)
         }
 
         if (email) {
@@ -66,9 +64,9 @@ export const POST = createPostHandler(async (body) => {
             if (existingTrackingUser) {
                 userId = existingTrackingUser.user_id;
 
-                console.log("\tUsing user_id from email " + email + " based on earlier rows")
+                console.log("Using user_id from email " + email + " based on earlier rows")
             } else
-                console.log("\tNo user_id found in tracking table for email " + email)
+                console.log("No user_id found in tracking table for email " + email)
         }
     }
 
@@ -85,7 +83,7 @@ export const POST = createPostHandler(async (body) => {
         if (nextIdData === null || typeof nextIdData !== 'number')
             throw new Error('Failed to generate user ID: Invalid data received.');
 
-        console.log("\tGenerated user_id " + nextIdData)
+        console.log("Generated user_id " + nextIdData)
         userId = nextIdData;
     }
 
@@ -105,13 +103,8 @@ export const POST = createPostHandler(async (body) => {
             .eq('active', true)
             .single();
 
-        if (!slugError && headlineBySlug) {
-            headlineInfo = headlineBySlug as Headline;
-
-            console.log("\tFound headline by slug " + headline_slug)
-        } else
-            console.log("\tNo headline found by slug " + headline_slug)
-
+        if (!slugError && headlineBySlug) 
+            headlineInfo = headlineBySlug as Headline;        
     }
 
     if (!headlineInfo) {

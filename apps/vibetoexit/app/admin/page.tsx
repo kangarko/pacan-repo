@@ -15,6 +15,7 @@ import { FormsTab } from '@repo/ui/admin/FormsAdminSection';
 import { WebinarAdminSection } from '@repo/ui/admin/WebinarAdminSection';
 import { OffersAdminSection } from '@repo/ui/admin/OffersAdminSection';
 import { HeadlinesTab } from '@repo/ui/admin/HeadlinesAdminSection';
+import { VisitorsAdminSection } from '@repo/ui/admin/VisitorsAdminSection';
 
 const ADMIN_SIDEBAR_COLLAPSED_LS_KEY = 'admin_sidebarCollapsed';
 
@@ -28,7 +29,8 @@ enum ActiveTab {
     EXPERIMENTS = 'experiments',
     WEBINAR = 'webinar',
     OFFERS = 'offers',
-    HEADLINES = 'headlines'
+    HEADLINES = 'headlines',
+    VISITORS = 'visitors'
 }
 
 export default function AdminDashboard() {
@@ -120,6 +122,7 @@ export default function AdminDashboard() {
         { tab: ActiveTab.USERS, label: 'Users', icon: <Users className="w-5 h-5" />, href: '/admin/users', marketerAccess: true },
         { tab: ActiveTab.OFFERS, label: 'Offers', icon: <Package className="w-5 h-5" />, href: '/admin/offers', marketerAccess: false },
         { tab: ActiveTab.HEADLINES, label: 'Headlines', icon: <FileText className="w-5 h-5" />, href: '/admin/headlines', marketerAccess: true },
+        { tab: ActiveTab.VISITORS, label: 'Visitors', icon: <Users className="w-5 h-5" />, href: '/admin/visitors', marketerAccess: true },
         { tab: ActiveTab.FORMS, label: 'Forms', icon: <FileText className="w-5 h-5" />, href: '/admin/forms', marketerAccess: true },
         { tab: ActiveTab.INTEGRATIONS, label: 'Integrations', icon: <Database className="w-5 h-5" />, href: '/admin/integrations', marketerAccess: true },
         { tab: ActiveTab.IMAGE_GENERATION, label: 'Generate', icon: <Palette className="w-5 h-5" />, href: '/admin/image-generation', marketerAccess: true },
@@ -248,6 +251,7 @@ export default function AdminDashboard() {
                     <div className="animate-fadeIn">
                         {activeTab === ActiveTab.SALES_DATA && <SalesDataTab />}
                         {activeTab === ActiveTab.USERS && <UsersTab userRole={userRole} />}
+                        {activeTab === ActiveTab.VISITORS && <VisitorsAdminSection />}
                         {activeTab === ActiveTab.FORMS && <FormsTab />}
                         {activeTab === ActiveTab.INTEGRATIONS && <IntegrationsTab />}
                         {activeTab === ActiveTab.IMAGE_GENERATION && <GenerateTab userRole={userRole} />}

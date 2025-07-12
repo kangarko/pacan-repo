@@ -10,9 +10,7 @@ import { getDiscountPercent, replaceAccentTags } from '@repo/ui/lib/utils';
 import { UserContextData, Headline } from '@repo/ui/lib/types';
 import { Offer } from '@repo/ui/lib/types';
 import { getIconByName } from '@repo/ui/lib/iconMapping';
-import { sendClientErrorEmail } from '@repo/ui/lib/clientUtils';
 import { useSokolSession } from '@repo/ui/components/SokolSessionHandler';
-import Cookies from 'js-cookie';
 
 // Add countdown component
 const CountdownTimer = React.memo(() => {

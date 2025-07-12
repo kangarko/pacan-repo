@@ -75,9 +75,6 @@ export default function SokolSessionHandler({ children, lang = 'en' }: { childre
                     Cookies.set('active_headline', JSON.stringify(response.headline));
                 }
 
-                console.log("[client] Cookie user_id: " + Cookies.get('user_id'));
-                console.log("[client] Local storage user_id: " + safeLocalStorageGet('user_id', ''));
-
                 setSokolData(response);
 
             } catch (error) {
@@ -94,8 +91,6 @@ export default function SokolSessionHandler({ children, lang = 'en' }: { childre
     useEffect(() => {
         if (!pixelLoaded || !sokolData)
             return;
-
-        console.log("[client] Tracking view for user_id: " + sokolData.user_id + " and headline_id: " + sokolData.headline?.id);
 
         track('view', {
             user_id: sokolData.user_id,

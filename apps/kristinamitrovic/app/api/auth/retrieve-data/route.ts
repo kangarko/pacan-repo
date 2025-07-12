@@ -41,7 +41,7 @@ export const POST = createPostHandler(async (body, request) => {
     if (shouldFetchTransactions)
         responseData.transactions = transactions;
 
-    let ip = await getClientIp(request);
+    const ip = await getClientIp(request);
     const FAIL_REGION = 'HR';
 
     if (process.env.NODE_ENV === 'development') {

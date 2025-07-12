@@ -1,5 +1,5 @@
 body {
-    @apply bg-[#FFF9E9] text-[#4b2c5e] antialiased;
+    @apply bg-[#000000] text-white antialiased;
 }
 
 ::-webkit-scrollbar-track {
