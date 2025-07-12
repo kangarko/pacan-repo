@@ -12,6 +12,7 @@ import { retrieveData, sendClientErrorEmail, track } from '@repo/ui/lib/clientUt
 import { UserContextData, WebinarSchedule, WebinarScheduleType, FoundWebinar } from '@repo/ui/lib/types';
 import GradientBackground from '@repo/ui/components/GradientBackground';
 import FooterSection from '@repo/ui/components/FooterSection';
+import { useSokolSession } from '@repo/ui/components/SokolSessionHandler';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -55,6 +56,7 @@ const timeToMinutes = (timeStr: string): number => {
 };
 
 function WebinarContent() {
+    const { userId, isInitialized } = useSokolSession();
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -378,10 +380,15 @@ function WebinarContent() {
             return;
         }
 
+        if (!userId) {
+            throw new Error('Critical error: userId not available for webinar_email tracking');
+        }
+
         track('webinar_email', {
             email: trimmedEmail,
             region: userContext.region,
             primary_offer_slug: webinarResponse.offer_slug,
+            user_id: userId
         });
 
         Cookies.set('lead_email', trimmedEmail);
@@ -422,11 +429,16 @@ function WebinarContent() {
             return;
         }
 
+        if (!userId) {
+            throw new Error('Critical error: userId not available for webinar_name tracking');
+        }
+
         track('webinar_name', {
             name: trimmedName,
             email: email,
             region: userContext.region,
             primary_offer_slug: webinarResponse.offer_slug,
+            user_id: userId
         });
 
         Cookies.set('lead_name', trimmedName);
@@ -456,11 +468,16 @@ function WebinarContent() {
             throw new Error('User context not found');
         }
 
+        if (!userId) {
+            throw new Error('Critical error: userId not available for sign_up tracking');
+        }
+
         await track('sign_up', {
             name: name,
             email: email,
             region: Cookies.get('region') || '',
             primary_offer_slug: webinarResponse.offer_slug,
+            user_id: userId
         });
 
         try {
@@ -529,6 +546,23 @@ function WebinarContent() {
         else
             performRedirect(`/webinar/thank-you/${webinarResponse.active_session.id}`);
     };
+
+    // Ensure session is initialized before rendering
+    if (!isInitialized) {
+        return (
+            <div className="min-h-screen relative py-4 overflow-hidden bg-gradient-to-br from-[#FFF9E9] to-[#E1CCEB] flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin mx-auto w-10 h-10 border-4 border-[#6B498F] border-t-transparent rounded-full mb-4"></div>
+                    <p className="text-[#6B498F]">Priprema sesije...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // userId MUST be available after initialization
+    if (!userId) {
+        throw new Error('Critical error: Session initialized but userId is not available. This should never happen.');
+    }
 
     return (
         <>

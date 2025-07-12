@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { RefreshCw, XCircle, Loader2, Mail, Zap, MoreVertical, Trash2, Archive, AlertCircle, Facebook, Check, ChevronUp, ChevronDown } from 'lucide-react';
 import { fetchJsonPost, formatDate } from '@repo/ui/lib/utils';
-import { createSupabaseClient, sendClientErrorEmail } from '@repo/ui/lib/clientUtils';
+import { createSupabaseClient, sendClientErrorEmail, safeLocalStorageGet, safeLocalStorageSet } from '@repo/ui/lib/clientUtils';
 import { getSupportEmailConversationCache, setSupportEmailConversationCache, deleteSupportEmailConversationCache, getSupportEmailThreadsCache, setSupportEmailThreadsCache, getSupportFbConversationCache, setSupportFbConversationCache, deleteSupportFbConversationCache, getSupportFbThreadsCache, setSupportFbThreadsCache } from '@repo/ui/lib/dbUtils';
 import { EmailThreadSummary, EmailMessage, FacebookThreadSummary, FacebookMessage } from '@repo/ui/lib/types';
 import EmailMessageContent from '@repo/ui/components/admin/EmailMessageContent';
@@ -52,7 +52,7 @@ const cleanClientSnippet = (snippetText: string | undefined): string => {
 
 export function SupportTab() {
     const [activeSource, setActiveSource] = useState<'email' | 'facebook'>(() =>
-        (localStorage.getItem(SUPPORT_ACTIVE_SOURCE_LS_KEY) as 'email' | 'facebook') || 'email'
+        (safeLocalStorageGet(SUPPORT_ACTIVE_SOURCE_LS_KEY, 'email') as 'email' | 'facebook')
     );
     const [emailThreads, setEmailThreads] = useState<EmailThreadSummary[]>([]);
     const [facebookThreads, setFacebookThreads] = useState<FacebookThreadSummary[]>([]);
@@ -125,7 +125,7 @@ export function SupportTab() {
 
     useEffect(() => {
         const loadInitialData = async () => {
-            const initialSource = (localStorage.getItem(SUPPORT_ACTIVE_SOURCE_LS_KEY) as 'email' | 'facebook') || 'email';
+            const initialSource = (safeLocalStorageGet(SUPPORT_ACTIVE_SOURCE_LS_KEY, 'email') as 'email' | 'facebook');
             setActiveSource(initialSource);
             let lastSelectedId: string | null = null;
             let initialConversation: any[] | undefined;
@@ -153,7 +153,7 @@ export function SupportTab() {
 
             try {
                 const lastIdKey = initialSource === 'email' ? LAST_EMAIL_THREAD_ID_LS_KEY : LAST_FB_THREAD_ID_LS_KEY;
-                lastSelectedId = localStorage.getItem(lastIdKey);
+                lastSelectedId = safeLocalStorageGet(lastIdKey, '');
                 if (lastSelectedId) {
                     if (initialSource === 'email') {
                         initialConversation = await getSupportEmailConversationCache(lastSelectedId); // Correct
@@ -172,7 +172,7 @@ export function SupportTab() {
                 }
             } catch (e) {
                 const lastIdKey = initialSource === 'email' ? LAST_EMAIL_THREAD_ID_LS_KEY : LAST_FB_THREAD_ID_LS_KEY;
-                localStorage.removeItem(lastIdKey);
+                safeLocalStorageSet(lastIdKey, ''); // Clear invalid item
                 if (lastSelectedId) {
                     if (initialSource === 'email') {
                         await deleteSupportEmailConversationCache(lastSelectedId); // Correct
@@ -229,7 +229,7 @@ export function SupportTab() {
             return;
 
         setActiveSource(newSource);
-        localStorage.setItem(SUPPORT_ACTIVE_SOURCE_LS_KEY, newSource);
+        safeLocalStorageSet(SUPPORT_ACTIVE_SOURCE_LS_KEY, newSource);
         setSelectedThreadId(null);
         setCurrentEmailConversation([]);
         setCurrentFbConversation([]);
@@ -246,7 +246,7 @@ export function SupportTab() {
             }
         } else {
             const lastIdKey = newSource === 'email' ? LAST_EMAIL_THREAD_ID_LS_KEY : LAST_FB_THREAD_ID_LS_KEY;
-            const lastId = localStorage.getItem(lastIdKey);
+            const lastId = safeLocalStorageGet(lastIdKey, '');
             if (lastId) {
                 handleSelectThread(lastId, newSource, true);
             }
@@ -260,7 +260,7 @@ export function SupportTab() {
             setSelectedThreadId(threadId);
             const lastIdKey = source === 'email' ? LAST_EMAIL_THREAD_ID_LS_KEY : LAST_FB_THREAD_ID_LS_KEY;
             
-            localStorage.setItem(lastIdKey, threadId);
+            safeLocalStorageSet(lastIdKey, threadId);
         }
         setIsLoadingConversation(true);
         setDraftReply('');
@@ -545,7 +545,7 @@ export function SupportTab() {
                 setSelectedThreadId(null);
                 setCurrentEmailConversation([]);
                 setDraftReply('');
-                localStorage.removeItem(LAST_EMAIL_THREAD_ID_LS_KEY);
+                safeLocalStorageSet(LAST_EMAIL_THREAD_ID_LS_KEY, '');
             }
         } catch (err: any) {
             setError(`Failed to delete email thread: ${err.message}`);
@@ -576,7 +576,7 @@ export function SupportTab() {
                 setSelectedThreadId(null);
                 setCurrentEmailConversation([]);
                 setDraftReply('');
-                localStorage.removeItem(LAST_EMAIL_THREAD_ID_LS_KEY);
+                safeLocalStorageSet(LAST_EMAIL_THREAD_ID_LS_KEY, '');
             }
         } catch (err: any) {
             setError(`Failed to move email thread: ${err.message}`);

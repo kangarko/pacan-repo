@@ -3,9 +3,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Users, UserPlus, CheckCircle, DollarSign, ShoppingBag, Globe, Mail, AlertCircle, Database, CreditCard, RotateCcw, ChevronDown, ChevronRight, Zap, ArrowUpRight, ChevronUp } from 'lucide-react';
 import { fetchJsonPost, formatCurrency, formatDateWithDayShort, getFlagUrl, formatDate } from '@repo/ui/lib/utils';
-import { sendClientErrorEmail } from '@repo/ui/lib/clientUtils';
+import { sendClientErrorEmail, safeLocalStorageGet, safeLocalStorageSet } from '@repo/ui/lib/clientUtils';
 import { getSalesDataCache, setSalesDataCache, clearSalesDataCache } from '@repo/ui/lib/dbUtils';
-import { AdminSalesData, CampaignInfo, AdSetInfo, AdInfo, AttributedPurchase, TrackedStep } from '@repo/ui/lib/types';
+import { AdminSalesData, CampaignInfo, AdSetInfo, AdInfo, AttributedPurchase, TrackedStep, SignupInfo } from '@repo/ui/lib/types';
 import Image from 'next/image';
 import { SalesDataCacheProgress } from '@repo/ui/components/admin/SalesDataCacheProgress';
 
@@ -30,50 +30,38 @@ type GroupSortColumn = 'name' | 'spend' | 'sales' | 'cash' | 'roas';
 
 export function SalesDataTab() {
     const [startDate, setStartDate] = useState<string>(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem(SALES_DATA_START_DATE_LS_KEY) || formatDateLocal(new Date());
-        }
-        return formatDateLocal(new Date());
+        return safeLocalStorageGet(SALES_DATA_START_DATE_LS_KEY, formatDateLocal(new Date()));
     });
 
     const [endDate, setEndDate] = useState<string>(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem(SALES_DATA_END_DATE_LS_KEY) || formatDateLocal(new Date());
-        }
-        return formatDateLocal(new Date());
+        return safeLocalStorageGet(SALES_DATA_END_DATE_LS_KEY, formatDateLocal(new Date()));
     });
 
     const [selectedCurrency, setSelectedCurrency] = useState<string>(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem(SALES_DATA_CURRENCY_LS_KEY) || 'USD';
-        }
-        return 'USD';
+        return safeLocalStorageGet(SALES_DATA_CURRENCY_LS_KEY, 'USD');
     });
 
     const [selectedUrl, setSelectedUrl] = useState<string>(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem(SALES_DATA_URL_LS_KEY) || '/';
-        }
-        return '/';
+        return safeLocalStorageGet(SALES_DATA_URL_LS_KEY, '/');
     });
 
     const [appliedFilters, setAppliedFilters] = useState(() => ({
-        startDate: typeof window !== 'undefined' ? localStorage.getItem(SALES_DATA_START_DATE_LS_KEY) || formatDateLocal(new Date()) : formatDateLocal(new Date()),
-        endDate: typeof window !== 'undefined' ? localStorage.getItem(SALES_DATA_END_DATE_LS_KEY) || formatDateLocal(new Date()) : formatDateLocal(new Date()),
-        currency: typeof window !== 'undefined' ? localStorage.getItem(SALES_DATA_CURRENCY_LS_KEY) || 'USD' : 'USD',
-        url: typeof window !== 'undefined' ? localStorage.getItem(SALES_DATA_URL_LS_KEY) || '/' : '/'
+        startDate: safeLocalStorageGet(SALES_DATA_START_DATE_LS_KEY, formatDateLocal(new Date())),
+        endDate: safeLocalStorageGet(SALES_DATA_END_DATE_LS_KEY, formatDateLocal(new Date())),
+        currency: safeLocalStorageGet(SALES_DATA_CURRENCY_LS_KEY, 'USD'),
+        url: safeLocalStorageGet(SALES_DATA_URL_LS_KEY, '/')
     }));
 
     const [activeView, setActiveView] = useState<'summary' | 'signups' | 'orders' | 'adspend' | 'visitors' | 'countries' | 'paymentMethods'>(
-        () => typeof window !== 'undefined' ? (localStorage.getItem(SALES_DATA_ACTIVE_VIEW_LS_KEY) as any) || 'summary' : 'summary'
+        () => (safeLocalStorageGet(SALES_DATA_ACTIVE_VIEW_LS_KEY, 'summary') as any)
     );
 
     const [sourceDisplayOption, setSourceDisplayOption] = useState<'first' | 'last'>(
-        () => typeof window !== 'undefined' ? (localStorage.getItem(SALES_DATA_SOURCE_DISPLAY_LS_KEY) as any) || 'first' : 'first'
+        () => (safeLocalStorageGet(SALES_DATA_SOURCE_DISPLAY_LS_KEY, 'first') as any)
     );
 
     const [fbAttributionOption, setFbAttributionOption] = useState<'first' | 'last'>(
-        () => typeof window !== 'undefined' ? (localStorage.getItem(SALES_DATA_FB_ATTRIBUTION_LS_KEY) as any) || 'last' : 'last'
+        () => (safeLocalStorageGet(SALES_DATA_FB_ATTRIBUTION_LS_KEY, 'last') as any)
     );
 
     const [currentRange, setCurrentRange] = useState<string>('');
@@ -88,11 +76,11 @@ export function SalesDataTab() {
     const [mobileViewMenuOpen, setMobileViewMenuOpen] = useState(false);
 
     useEffect(() => {
-        localStorage.setItem(SALES_DATA_ACTIVE_VIEW_LS_KEY, activeView);
+        safeLocalStorageSet(SALES_DATA_ACTIVE_VIEW_LS_KEY, activeView);
     }, [activeView]);
 
     useEffect(() => {
-        localStorage.setItem(SALES_DATA_FB_ATTRIBUTION_LS_KEY, 'last');
+        safeLocalStorageSet(SALES_DATA_FB_ATTRIBUTION_LS_KEY, 'last');
     }, []);
 
     const handleCacheComplete = () => {
@@ -168,10 +156,10 @@ export function SalesDataTab() {
     }
 
     const saveFilterSettings = () => {
-        localStorage.setItem(SALES_DATA_START_DATE_LS_KEY, startDate);
-        localStorage.setItem(SALES_DATA_END_DATE_LS_KEY, endDate);
-        localStorage.setItem(SALES_DATA_CURRENCY_LS_KEY, selectedCurrency);
-        localStorage.setItem(SALES_DATA_URL_LS_KEY, selectedUrl);
+        safeLocalStorageSet(SALES_DATA_START_DATE_LS_KEY, startDate);
+        safeLocalStorageSet(SALES_DATA_END_DATE_LS_KEY, endDate);
+        safeLocalStorageSet(SALES_DATA_CURRENCY_LS_KEY, selectedCurrency);
+        safeLocalStorageSet(SALES_DATA_URL_LS_KEY, selectedUrl);
     };
 
     const handleDateRangeSelect = (range: string) => {
@@ -1071,7 +1059,7 @@ export function SalesDataTab() {
                                                         }`}
                                                     onClick={() => {
                                                         setSourceDisplayOption('first');
-                                                        localStorage.setItem(SALES_DATA_SOURCE_DISPLAY_LS_KEY, 'first');
+                                                        safeLocalStorageSet(SALES_DATA_SOURCE_DISPLAY_LS_KEY, 'first');
                                                     }}
                                                 >
                                                     First
@@ -1081,7 +1069,7 @@ export function SalesDataTab() {
                                                         }`}
                                                     onClick={() => {
                                                         setSourceDisplayOption('last');
-                                                        localStorage.setItem(SALES_DATA_SOURCE_DISPLAY_LS_KEY, 'last');
+                                                        safeLocalStorageSet(SALES_DATA_SOURCE_DISPLAY_LS_KEY, 'last');
                                                     }}
                                                 >
                                                     Last
@@ -1403,7 +1391,7 @@ export function SalesDataTab() {
                                                         }`}
                                                     onClick={() => {
                                                         setFbAttributionOption('first');
-                                                        localStorage.setItem(SALES_DATA_FB_ATTRIBUTION_LS_KEY, 'first');
+                                                        safeLocalStorageSet(SALES_DATA_FB_ATTRIBUTION_LS_KEY, 'first');
                                                     }}
                                                 >
                                                     First
@@ -1413,7 +1401,7 @@ export function SalesDataTab() {
                                                         }`}
                                                     onClick={() => {
                                                         setFbAttributionOption('last');
-                                                        localStorage.setItem(SALES_DATA_FB_ATTRIBUTION_LS_KEY, 'last');
+                                                        safeLocalStorageSet(SALES_DATA_FB_ATTRIBUTION_LS_KEY, 'last');
                                                     }}
                                                 >
                                                     Last

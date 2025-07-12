@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Users, Database, FlaskConical, Menu, X, TrendingUp, Package, FileText, Palette, LifeBuoy, PlayCircle, Power, ChevronLeft, ChevronRight } from 'lucide-react';
-import { createSupabaseClient } from '@repo/ui/lib/clientUtils';
+import { createSupabaseClient, safeLocalStorageGet, safeLocalStorageSet } from '@repo/ui/lib/clientUtils';
 import { SupportTab } from '@repo/ui/admin/SupportAdminSection';
 import { UsersTab } from '@repo/ui/admin/UsersAdminSection';
 import { SalesDataTab } from '@repo/ui/admin/SalesDataAdminSection';
@@ -41,10 +41,7 @@ export default function AdminDashboard() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem(ADMIN_SIDEBAR_COLLAPSED_LS_KEY) === 'true';
-        }
-        return true; // default to collapsed
+        return safeLocalStorageGet(ADMIN_SIDEBAR_COLLAPSED_LS_KEY, 'true') === 'true';
     });
 
     const handleTabChange = (tab: ActiveTab) => {
@@ -83,7 +80,7 @@ export default function AdminDashboard() {
     }, [router, supabase.auth]);
 
     useEffect(() => {
-        localStorage.setItem(ADMIN_SIDEBAR_COLLAPSED_LS_KEY, String(isSidebarCollapsed));
+        safeLocalStorageSet(ADMIN_SIDEBAR_COLLAPSED_LS_KEY, String(isSidebarCollapsed));
     }, [isSidebarCollapsed]);
 
     const handleLogout = async () => {

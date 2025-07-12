@@ -26,7 +26,7 @@ export const useSokolSession = () => {
     return context;
 };
 
-export default function SokolSessionHandler({ children }: { children: ReactNode }) {
+export default function SokolSessionHandler({ children, lang = 'en' }: { children: ReactNode, lang?: string }) {
     const [cookiesEnabled, setCookiesEnabled] = useState<boolean | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
@@ -35,17 +35,21 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
 
     // Check if cookies are enabled
     useEffect(() => {
+        // The most reliable way to check for cookie support is to try to set one.
+        // We'll use the js-cookie library as it can handle some browser quirks,
+        // and wrap it in a try-catch for maximum safety in restrictive environments.
         try {
-            // Try to set a test cookie
-            document.cookie = 'cookietest=1; SameSite=Lax';
-            const cookiesWork = document.cookie.includes('cookietest=1');
-
-            // Clean up test cookie
-            if (cookiesWork)
-                document.cookie = 'cookietest=1; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            Cookies.set('cookietest', '1', { sameSite: 'Lax' });
+            const cookiesWork = Cookies.get('cookietest') === '1';
+            
+            // Clean up the test cookie
+            Cookies.remove('cookietest');
 
             setCookiesEnabled(cookiesWork);
-        } catch {
+        } catch (e) {
+            // This will catch errors in environments where cookie access is completely blocked,
+            // such as Safari's "hardest mode" or in certain iFrames.
+            console.warn('Could not access cookies. This might be due to browser privacy settings.', e);
             setCookiesEnabled(false);
         }
     }, []);
@@ -120,6 +124,42 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
 
     // Show error message if cookies are disabled
     if (!cookiesEnabled) {
+        if (lang === 'hr') {
+            return (
+                <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+                    <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+                        <div className="mb-6">
+                            <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto" />
+                        </div>
+                        <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                            Kolačići su onemogućeni
+                        </h1>
+                        <p className="text-gray-600 mb-6">
+                            Ova stranica zahtijeva omogućene kolačiće (cookies) za pravilno funkcioniranje.
+                            Molimo vas da omogućite kolačiće u postavkama vašeg preglednika i osvježite stranicu.
+                        </p>
+                        <div className="bg-gray-50 p-4 rounded-md text-left">
+                            <p className="text-sm text-gray-500 font-medium mb-2">
+                                Kako omogućiti kolačiće:
+                            </p>
+                            <ul className="text-sm text-gray-600 space-y-1">
+                                <li>• Chrome: Postavke → Privatnost i sigurnost → Kolačići</li>
+                                <li>• Firefox: Postavke → Privatnost i sigurnost → Kolačići</li>
+                                <li>• Safari: Postavke → Privatnost → Kolačići</li>
+                                <li>• Edge: Postavke → Kolačići i dozvole stranice</li>
+                            </ul>
+                        </div>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
+                        >
+                            Osvježi stranicu
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
                 <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
@@ -127,28 +167,27 @@ export default function SokolSessionHandler({ children }: { children: ReactNode 
                         <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto" />
                     </div>
                     <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                        Kolačići su onemogućeni
+                        Cookies are disabled
                     </h1>
                     <p className="text-gray-600 mb-6">
-                        Ova stranica zahtijeva omogućene kolačiće (cookies) za pravilno funkcioniranje.
-                        Molimo vas da omogućite kolačiće u postavkama vašeg preglednika i osvježite stranicu.
+                        This site requires cookies to function properly. Please enable cookies in your browser settings and refresh the page.
                     </p>
                     <div className="bg-gray-50 p-4 rounded-md text-left">
                         <p className="text-sm text-gray-500 font-medium mb-2">
-                            Kako omogućiti kolačiće:
+                            How to enable cookies:
                         </p>
                         <ul className="text-sm text-gray-600 space-y-1">
-                            <li>• Chrome: Postavke → Privatnost i sigurnost → Kolačići</li>
-                            <li>• Firefox: Postavke → Privatnost i sigurnost → Kolačići</li>
-                            <li>• Safari: Postavke → Privatnost → Kolačići</li>
-                            <li>• Edge: Postavke → Kolačići i dozvole stranice</li>
+                            <li>• Chrome: Settings → Privacy and security → Cookies</li>
+                            <li>• Firefox: Settings → Privacy & Security → Cookies</li>
+                            <li>• Safari: Preferences → Privacy → Cookies</li>
+                            <li>• Edge: Settings → Cookies and site permissions</li>
                         </ul>
                     </div>
                     <button
                         onClick={() => window.location.reload()}
                         className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
                     >
-                        Osvježi stranicu
+                        Refresh page
                     </button>
                 </div>
             </div>

@@ -15,13 +15,14 @@ import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { getIconByName, DEFAULT_ICON } from '@repo/ui/lib/iconMapping';
 import { formatDiscountedPriceForCurrentUser } from '@repo/ui/lib/clientUtils';
+import { useSokolSession } from '@repo/ui/components/SokolSessionHandler';
 
 if (!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || !process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID)
     throw new Error('Missing Stripe or PayPal environment variables');
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
-const StripeCheckoutForm = ({ name, email, primaryOffer, secondaryOffer, totalAmount, currency }: { name: string; email: string; primaryOffer: Offer; secondaryOffer: Offer | null, totalAmount: number, currency: string }) => {
+const StripeCheckoutForm = ({ name, email, primaryOffer, secondaryOffer, totalAmount, currency, userId }: { name: string; email: string; primaryOffer: Offer; secondaryOffer: Offer | null, totalAmount: number, currency: string, userId: string | null }) => {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -43,7 +44,8 @@ const StripeCheckoutForm = ({ name, email, primaryOffer, secondaryOffer, totalAm
             value: totalAmount,
             currency: currency,
             primary_offer_slug: primaryOffer.slug,
-            secondary_offer_slug: secondaryOffer?.slug
+            secondary_offer_slug: secondaryOffer?.slug,
+            user_id: userId
         });
 
         const { error: submitError } = await stripe.confirmPayment({
@@ -72,7 +74,8 @@ const StripeCheckoutForm = ({ name, email, primaryOffer, secondaryOffer, totalAm
                 currency: currency,
                 primary_offer_slug: primaryOffer.slug,
                 secondary_offer_slug: secondaryOffer?.slug,
-                error: submitError.code + "/" + submitError.type
+                error: submitError.code + "/" + submitError.type,
+                user_id: userId
             });
         }
     };
@@ -205,6 +208,7 @@ const OrderBump = ({ userContext, checked, onChange, offer }: { userContext: Use
 );
 
 const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer: Offer; secondaryOffer: Offer | null; userContext: UserContextData | null; }) => {
+    const { userId, isInitialized } = useSokolSession();
     const [name, setName] = useState(Cookies.get('lead_name')?.trim() || '');
     const [email, setEmail] = useState(Cookies.get('lead_email')?.trim() || '');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -517,12 +521,19 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                 Cookies.set('lead_name', fullName, { expires: 365 });
                 Cookies.set('lead_email', trimmedEmail, { expires: 365 });
                 
+                // Track sign_up - userId MUST be available from SokolSessionHandler
+                if (!userId) {
+                    // This should never happen as SokolSessionHandler ensures userId exists
+                    throw new Error('Critical error: userId not available from SokolSessionHandler. This indicates session initialization failed.');
+                }
+                
                 await track('sign_up', {
                     name: fullName,
                     email: trimmedEmail,
                     region: userContext.region,
                     primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                     secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
+                    user_id: userId
                 });
             }
 
@@ -558,6 +569,7 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                 currency: getCurrency(),
                 primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                 secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
+                user_id: userId
             });
 
             if (!clientSecret)
@@ -594,7 +606,8 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                     currency: getCurrency(),
                     primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                     secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
-                    error: error instanceof Error ? error.message : 'Greška prilikom obrade plaćanja'
+                    error: error instanceof Error ? error.message : 'Greška prilikom obrade plaćanja',
+                    user_id: userId
                 });
             }
 
@@ -613,6 +626,21 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                 <p className="text-purple-200">Još nije spremno. Ako se problem nastavi, kontaktirajte nas na {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}</p>
             </div>
         );
+    }
+
+    // Ensure session is initialized before rendering form
+    if (!isInitialized) {
+        return (
+            <div className="flex flex-col justify-center items-center min-h-[500px] gap-4">
+                <div className="inline-block animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#6B498F]"></div>
+                <p className="text-[#6B498F]">Priprema sesije...</p>
+            </div>
+        );
+    }
+
+    // userId MUST be available after initialization
+    if (!userId) {
+        throw new Error('Critical error: Session initialized but userId is not available. This should never happen.');
     }
 
     return (
@@ -888,6 +916,7 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                         currency: getCurrency(),
                                                                         primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                                                                         secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
+                                                                        user_id: userId
                                                                     });
 
                                                                     const data = await fetchJsonPost('/api/paypal/create-order', {
@@ -911,7 +940,8 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                         currency: getCurrency(),
                                                                         primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                                                                         secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
-                                                                        error: error instanceof Error ? error.message : 'unknown'
+                                                                        error: error instanceof Error ? error.message : 'unknown',
+                                                                        user_id: userId
                                                                     });
 
                                                                     setIsSubmitting(false);
@@ -958,7 +988,8 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                     currency: getCurrency(),
                                                                     primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                                                                     secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
-                                                                    error: err instanceof Error ? err : 'PayPal error'
+                                                                    error: err instanceof Error ? err : 'PayPal error',
+                                                                    user_id: userId
                                                                 });
                                                             }}
                                                             onCancel={() => {
@@ -988,6 +1019,7 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                 secondaryOffer={secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer : null}
                                                                 totalAmount={getTotalAmount()}
                                                                 currency={getCurrency()}
+                                                                userId={userId}
                                                             />
                                                         </Elements>
                                                     ) : (

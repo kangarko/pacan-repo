@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { RefreshCw, CheckCircle, Loader2, Facebook, Database, Unlink, AlertCircle, FileText, ChevronUp, ChevronDown } from 'lucide-react';
 import { fetchJsonPost, formatDate, normalizeAccountId } from '@repo/ui/lib/utils';
-import { createSupabaseClient, sendClientErrorEmail } from '@repo/ui/lib/clientUtils';
+import { createSupabaseClient, sendClientErrorEmail, safeLocalStorageGet, safeLocalStorageSet, safeLocalStorageRemoveItem } from '@repo/ui/lib/clientUtils';
 
 export function IntegrationsTab() {
     const [activeSubTab, setActiveSubTab] = useState<'facebook' | 'other'>('facebook');
@@ -173,30 +173,41 @@ function FacebookIntegrationSubTab() {
     }, [isFetchingAccounts, selectedAdAccount, handleFacebookApiError]);
 
     const loadAdAccountsFromCache = () => {
-        const cachedData = localStorage.getItem('facebook_ad_accounts');
+        const cachedData = safeLocalStorageGet('facebook_ad_accounts', '');
 
-        if (!cachedData)
-            return null;
-
-        const parsedData = JSON.parse(cachedData);
-        const cacheExpiry = parsedData.expiry || 0;
-
-        if (cacheExpiry < Date.now()) {
-            localStorage.removeItem('facebook_ad_accounts');
-
+        if (!cachedData) {
             return null;
         }
 
-        return parsedData.accounts;
+        try {
+            const parsedData = JSON.parse(cachedData);
+            if (!parsedData || !parsedData.expiry) {
+                safeLocalStorageRemoveItem('facebook_ad_accounts');
+                return null;
+            }
+            
+            const cacheExpiry = parsedData.expiry || 0;
+
+            if (cacheExpiry < Date.now()) {
+                safeLocalStorageRemoveItem('facebook_ad_accounts');
+                return null;
+            }
+
+            return parsedData.accounts;
+        } catch (e) {
+            console.warn('Error parsing cached ad accounts:', e);
+            safeLocalStorageRemoveItem('facebook_ad_accounts');
+            return null;
+        }
     };
 
     const saveAdAccountsToCache = (accounts: any[]) => {
         const cacheData = {
             accounts,
-            expiry: Date.now() + (24 * 60 * 60 * 1000)
+            expiry: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
         };
 
-        localStorage.setItem('facebook_ad_accounts', JSON.stringify(cacheData));
+        safeLocalStorageSet('facebook_ad_accounts', JSON.stringify(cacheData));
     };
 
     const fetchFacebookCache = useCallback(async () => {

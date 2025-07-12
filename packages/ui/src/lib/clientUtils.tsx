@@ -1,8 +1,61 @@
+'use client';
+
 import { createBrowserClient } from "@supabase/ssr";
 import { EmailTemplate, EventType, Offer, UserContextData } from "@repo/ui/lib/types";
 import Cookies from 'js-cookie';
 import { convertToFacebookEvent, ensureError, fetchJsonPost, formatCurrency, getPricing } from "@repo/ui/lib/utils";
 
+// A mock storage implementation for environments where localStorage is not available.
+class StorageShim {
+    private store: Record<string, string> = {};
+  
+    public get length(): number {
+        return Object.keys(this.store).length;
+    }
+
+    public key(index: number): string | null {
+        const keys = Object.keys(this.store);
+        return keys[index] || null;
+    }
+
+    public getItem(key: string): string | null {
+      return this.store[key] || null;
+    }
+  
+    public setItem(key: string, value: string): void {
+      this.store[key] = value.toString();
+    }
+  
+    public removeItem(key: string): void {
+      delete this.store[key];
+    }
+  
+    public clear(): void {
+      this.store = {};
+    }
+  }
+  
+  let storage: Storage;
+  
+  // This function checks if localStorage is available and falls back to the shim if not.
+  function getStorage(): Storage {
+    if (storage) {
+      return storage;
+    }
+  
+    try {
+      // Check if localStorage is available and usable
+      window.localStorage.setItem('__test', '1');
+      window.localStorage.removeItem('__test');
+      storage = window.localStorage;
+    } catch (e) {
+      console.warn("localStorage is not available. Falling back to an in-memory store. Some features might not persist across sessions.");
+      storage = new StorageShim();
+    }
+  
+    return storage;
+  }
+  
 declare global {
     interface Window {
         fbq: (action: string, eventName: string, params?: Record<string, any>, options?: { eventID?: string }) => void;
@@ -163,7 +216,10 @@ export async function track(eventType: EventType, eventData: Record<string, any>
                 sokol_id: sokol_id,
 
                 // Spread the rest of event_data, potentially overriding extracted params if passed explicitly
-                ...eventData
+                ...eventData,
+                
+                // Ensure user_id is included - use from eventData or fallback to cookie
+                user_id: eventData.user_id || Cookies.get('user_id') || null
             }
         };
 
@@ -287,3 +343,38 @@ export const scrollToOrderForm = (e?: React.MouseEvent<HTMLElement>) => {
         }, 3000);
     }
 };
+
+export function safeLocalStorageGet(key: string, defaultValue: string): string {
+    if (typeof window === 'undefined') {
+        return defaultValue;
+    }
+    try {
+        const value = getStorage().getItem(key);
+        return value ?? defaultValue;
+    } catch (e) {
+        console.warn(`Could not access storage for key "${key}":`, e);
+        return defaultValue;
+    }
+}
+
+export function safeLocalStorageSet(key: string, value: string): void {
+    if (typeof window === 'undefined') {
+        return;
+    }
+    try {
+        getStorage().setItem(key, value);
+    } catch (e) {
+        console.warn(`Could not write to localStorage for key "${key}":`, e);
+    }
+}
+
+export function safeLocalStorageRemoveItem(key: string): void {
+    if (typeof window === 'undefined') {
+        return;
+    }
+    try {
+        getStorage().removeItem(key);
+    } catch (e) {
+        console.warn(`Could not remove item from localStorage for key "${key}":`, e);
+    }
+}

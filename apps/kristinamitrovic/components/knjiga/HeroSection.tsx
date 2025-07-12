@@ -223,7 +223,7 @@ const HeroSection = ({ primaryOffer, secondaryOffer, userContext, isLoading: pag
                             ) : (
                                 // Default fallback
                                 <>
-                                    Kako <span className="text-white">prevladati nesigurne obrasce privrženosti</span> i stvoriti zdravu, dugotrajnu vezu
+                                    Kako <span className="text-[#6B498F]">prevladati nesigurne obrasce privrženosti</span> i stvoriti zdravu, dugotrajnu vezu
                                     <span className="block text-base sm:text-lg md:text-xl lg:text-2xl text-[#6B498F]/80 mt-2 sm:mt-4 mb-8 font-normal">
                                         (Čak i ako ste već isprobali &quot;sve&quot;)
                                     </span>
