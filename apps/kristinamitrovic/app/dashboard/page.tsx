@@ -354,7 +354,7 @@ export default function Dashboard() {
 
     if (loading || !user) {
         return (
-            <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-gray-900 to-purple-900">
+            <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-gray-900 to-purple-900 relative">
                 <GradientBackground />
                 <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-purple-500"></div>
             </div>
@@ -777,13 +777,13 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-purple-900">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-purple-900 relative">
             <GradientBackground />
             <div className="container mx-auto px-0 sm:px-4 pt-0 sm:py-10">
                 <div className="bg-[#FFF9E9]/20 border border-[#E1CCEB]/50 backdrop-blur-lg sm:rounded-2xl overflow-hidden">
                     <div className="flex flex-col md:flex-row">
-                        <div className="w-full md:w-60 flex-shrink-0 border-r border-[#D4B5A0]/20 bg-[#FFEAFF] text-[#4b2c5e] md:h-auto">
-                            <div className="p-4 flex flex-col">
+                        <div className="w-full md:w-60 flex-shrink-0 border-r border-[#D4B5A0]/20 bg-[#FFEAFF] text-[#4b2c5e]">
+                            <div className="p-4 flex flex-col h-full">
                                 <div className="mb-8 text-center hidden md:block">
                                     <div className="inline-flex justify-center items-center w-12 h-12 rounded-full bg-[#E1CCEB] text-[#6B498F] mb-2">
                                         <UserIcon className="h-6 w-6" />
@@ -862,7 +862,7 @@ export default function Dashboard() {
                             </div>
                         </div>
 
-                        <div className="flex-1 p-6 bg-[#FFF9E9]">
+                        <div className="flex-1 p-6 bg-[#FFF9E9] min-w-0">
                             {renderContent()}
                         </div>
                     </div>

@@ -4,7 +4,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Lock, Cookie, Bell, Settings, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { COMPANY_INFO } from '@repo/ui/lib/types';
 import GradientBackground from '@repo/ui/components/GradientBackground';
 
 export default function Privacy() {
@@ -216,9 +215,9 @@ export default function Privacy() {
                                 Za sva pitanja vezana uz privatnost i korištenje osobnih podataka, možete nas kontaktirati:
                             </p>
                             <div className="text-[#4b2c5e]/80">
-                                <p>{COMPANY_INFO.name}</p>
-                                <p>{COMPANY_INFO.email}</p>
-                                <p>{COMPANY_INFO.address}</p>
+                                <p>{process.env.NEXT_PUBLIC_SITE_NAME}</p>
+                                <p>{process.env.NEXT_PUBLIC_SUPPORT_EMAIL}</p>
+                                <p>{process.env.NEXT_PUBLIC_SITE_ADDRESS}</p>
                             </div>
                         </div>
                     </div>

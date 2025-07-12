@@ -586,6 +586,7 @@ export async function trackServer(request: Request, eventType: EventType, data: 
 
     // Check if user_id is provided in params first, otherwise get from cookies
     let userId = data.user_id;
+    
     if (userId)
         delete data.user_id;
     else
@@ -715,12 +716,14 @@ export async function trackServer(request: Request, eventType: EventType, data: 
                 delete metadata[key as keyof typeof metadata];
         });
 
-        const headlineId = cookieStore.get('headline_id')?.value;
+        const headlineId = data.headline_id || cookieStore.get('headline_id')?.value;
 
         if (headlineId)
             metadata.headline_id = headlineId;
         else
-            sendServerErrorEmail(null, request, '[Warning] No headline_id found in cookies while tracking ' + eventType, new Error('[Warning] No headline_id found in cookies while tracking ' + eventType));
+            sendServerErrorEmail(null, request, '[Warning] No headline_id found while tracking ' + eventType, new Error('[Warning] No headline_id found while tracking ' + eventType));
+
+        console.log("[server/track] User id: " + userId);
 
         const trackingData = {
             date: date,
@@ -1261,6 +1264,7 @@ export async function sendServerErrorEmail(bodyText: any, request: Request | nul
     'use server';
 
     const cookieStore = await cookies();
+
     const ip = request && request.headers ? await getClientIp(request) : 'N/A';
     const url = request && request.url ? new URL(request.url) : null;
     const error = errorUnknown ? ensureError(errorUnknown, message) : new Error(message);

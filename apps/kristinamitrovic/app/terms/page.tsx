@@ -4,7 +4,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ScrollText, Shield, Lock, FileCheck, AlertCircle, Mail, Users, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { COMPANY_INFO } from '@repo/ui/lib/types';
 import GradientBackground from '@repo/ui/components/GradientBackground';
 
 export default function Terms() {
@@ -53,7 +52,7 @@ export default function Terms() {
                             </div>
                             <p className="text-[#4b2c5e]/80">
                                 Korištenjem ove knjige i povezanih materijala pristajete na ove Uvjete korištenja.
-                                {COMPANY_INFO.name} (&quot;mi&quot;, &quot;naš&quot; ili &quot;nas&quot;) zadržava pravo izmjene ovih uvjeta u bilo
+                                {process.env.NEXT_PUBLIC_SITE_NAME} (&quot;mi&quot;, &quot;naš&quot; ili &quot;nas&quot;) zadržava pravo izmjene ovih uvjeta u bilo
                                 kojem trenutku, a Vaša kontinuirana upotreba materijala nakon takvih promjena znači
                                 prihvaćanje novih uvjeta.
                             </p>
@@ -66,7 +65,7 @@ export default function Terms() {
                             </div>
                             <p className="text-[#4b2c5e]/80 mb-4">
                                 Svi materijali, uključujući ali ne ograničavajući se na tekst, grafike, logotipe,
-                                ikone, slike i softver, su vlasništvo {COMPANY_INFO.name} ili naših davatelja licenci
+                                ikone, slike i softver, su vlasništvo {process.env.NEXT_PUBLIC_SITE_NAME} ili naših davatelja licenci
                                 i zaštićeni su hrvatskim i međunarodnim zakonima o autorskim pravima.
                             </p>
                             <p className="text-[#4b2c5e]/80">
@@ -135,9 +134,9 @@ export default function Terms() {
                                 Ako imate pitanja ili nedoumice vezane uz ove Uvjete korištenja, molimo kontaktirajte nas:
                             </p>
                             <div className="text-[#4b2c5e]/80">
-                                <p>{COMPANY_INFO.name}</p>
-                                <p>{COMPANY_INFO.email}</p>
-                                <p>{COMPANY_INFO.address}</p>
+                                <p>{process.env.NEXT_PUBLIC_SITE_NAME}</p>
+                                <p>{process.env.NEXT_PUBLIC_SUPPORT_EMAIL}</p>
+                                <p>{process.env.NEXT_PUBLIC_SITE_ADDRESS}</p>
                             </div>
                         </div>
                     </div>

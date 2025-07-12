@@ -15,6 +15,11 @@ html {
     overflow-y: scroll;
 }
 
+/* Fix for select element in Safari */
+select {
+    -webkit-appearance: none;
+}
+
 /* Disable Opera Picture-in-Picture and Lucid mode button */
 #detach-button-host {
     display: none !important;

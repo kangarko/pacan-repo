@@ -4,7 +4,6 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Brain, Heart, Shield, Quote } from 'lucide-react';
-import { COMPANY_INFO } from '@repo/ui/lib/types';
 import { scrollToOrderForm } from '@repo/ui/lib/clientUtils';
 
 const DetailedDescriptionSection = () => {
@@ -28,7 +27,7 @@ const DetailedDescriptionSection = () => {
                             <div className="relative aspect-square rounded-2xl overflow-hidden mb-8">
                                 <Image
                                     src="/img/kristina.jpg"
-                                    alt={COMPANY_INFO.name}
+                                    alt="Kristina Mitrović"
                                     fill
                                     style={{ objectFit: 'cover' }}
                                     sizes="(max-width: 1024px) 100vw, 50vw"
@@ -41,7 +40,7 @@ const DetailedDescriptionSection = () => {
                                         &quot;Kroz godine rada s klijenticama, razvila sam metodologiju koja dosljedno pomaže ženama transformirati njihove obrasce privrženosti.&quot;
                                     </p>
                                     <p className="text-[#6B498F]">
-                                        — {COMPANY_INFO.name}, Stručnjakinja za privrženost
+                                        — Kristina Mitrović, Stručnjakinja za privrženost
                                     </p>
                                 </div>
                             </div>

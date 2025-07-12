@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Mail, MapPin, Shield, AlertCircle, FileText, Phone, Calendar, User } from 'lucide-react';
-import { COMPANY_INFO } from '@repo/ui/lib/types';
 
 const FooterSection = ({ showLinks = true, showMain = true }: { showLinks?: boolean, showMain?: boolean }) => {
     return (
@@ -39,13 +38,13 @@ const FooterSection = ({ showLinks = true, showMain = true }: { showLinks?: bool
                                     </li>
                                     <li className="flex items-center gap-2">
                                         <Mail className="w-4 h-4 text-[#6B498F]" />
-                                        <a href={`mailto:${COMPANY_INFO.email}`} className="text-[#4b2c5e]/80 hover:text-[#6B498F] transition-colors duration-300">
-                                            {COMPANY_INFO.email}
+                                        <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`} className="text-[#4b2c5e]/80 hover:text-[#6B498F] transition-colors duration-300">
+                                            {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
                                         </a>
                                     </li>
                                     <li className="flex items-center gap-2">
                                         <MapPin className="w-4 h-4 text-[#6B498F]" />
-                                        <span className="text-[#4b2c5e]/80">{COMPANY_INFO.address}</span>
+                                        <span className="text-[#4b2c5e]/80">{process.env.NEXT_PUBLIC_SITE_ADDRESS}</span>
                                     </li>
                                 </ul>
                             </motion.div>
@@ -82,7 +81,7 @@ const FooterSection = ({ showLinks = true, showMain = true }: { showLinks?: bool
                                 </p>
                                 <div className="mt-4 pt-4 border-t border-[#E1CCEB]">
                                     <p className="text-[#4b2c5e]/80 text-sm">
-                                        {COMPANY_INFO.name} nije povezana s Facebookom niti ju Facebook na bilo koji način podržava.
+                                        {process.env.NEXT_PUBLIC_SITE_NAME} nije povezana s Facebookom niti ju Facebook na bilo koji način podržava.
                                         Facebook je zaštitni znak tvrtke Meta Platforms, Inc.
                                     </p>
                                 </div>
@@ -126,7 +125,7 @@ const FooterSection = ({ showLinks = true, showMain = true }: { showLinks?: bool
                     )}
                     <div className="flex flex-col md:flex-row md:justify-between text-[#4b2c5e]/70 text-sm border-t border-[#E1CCEB] pt-8 space-y-4 md:space-y-0">
                         <p className="text-[#4b2c5e]/70 text-center md:text-left">
-                            &copy; {new Date().getFullYear()} {COMPANY_INFO.name}. Sva prava pridržana.
+                            &copy; {new Date().getFullYear()} {process.env.NEXT_PUBLIC_SITE_NAME}. Sva prava pridržana.
                         </p>
                         <div className="flex items-center gap-2 text-sm justify-center md:justify-end">
                             <Link href="/terms" className="hover:text-[#6B498F] transition-colors duration-300">Pravila korištenja</Link>

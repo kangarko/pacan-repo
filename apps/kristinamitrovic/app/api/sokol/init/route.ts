@@ -1,10 +1,10 @@
 import { cookies } from 'next/headers';
 import { createPostHandler, createSupabaseAdminClient, createSupabaseServerClient, createSuccessResponse } from '@repo/ui/lib/serverUtils';
-import { Headline } from '@repo/ui/lib/types';
+import { Headline, SokolData } from '@repo/ui/lib/types';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 export const POST = createPostHandler(async (body) => {
-    const { sokol_id, headline_slug } = body;
+    const { user_id, headline_id, sokol_id, headline_slug } = body;
 
     const cookieStore = await cookies();
     let adminClient: SupabaseClient;
@@ -16,19 +16,13 @@ export const POST = createPostHandler(async (body) => {
     // Part 1: Figure out user ID
     //
 
-    const cookieUserId = cookieStore.get('user_id')?.value;
+    const cookieUserId = user_id || cookieStore.get('user_id')?.value;
 
-    console.log('===============================================');
-    console.log('Sokol/init');
-    console.log('===============================================');
-
-    console.log('Cookie user_id', cookieUserId);
-    console.log('Query user_id', sokol_id);
-    console.log('Query headline_slug', headline_slug);
+    console.log('=============================================== Old user_id: ' + cookieUserId);
 
     if (cookieUserId && cookieUserId !== '1') {
         userId = cookieUserId;
-    
+
         console.log("\tUsing user_id from cookie")
     }
 
@@ -46,12 +40,13 @@ export const POST = createPostHandler(async (body) => {
 
         if (user) {
             email = user.email;
-        
-            console.log("\tUsing email from logged in user")
+
+            console.log("\tUsing email from logged in user: " + email)
         } else {
             email = cookieStore.get('lead_email')?.value;
-        
-            console.log("\tUsing email from lead_email cookie")
+
+            if (email)
+                console.log("\tUsing email from lead_email cookie: " + email)
         }
 
         if (email) {
@@ -72,7 +67,7 @@ export const POST = createPostHandler(async (body) => {
                 userId = existingTrackingUser.user_id;
 
                 console.log("\tUsing user_id from email " + email + " based on earlier rows")
-            } else 
+            } else
                 console.log("\tNo user_id found in tracking table for email " + email)
         }
     }
@@ -98,57 +93,82 @@ export const POST = createPostHandler(async (body) => {
     // Part 2: Figure out headline
     // 
 
-    const activeHeadlineJson = cookieStore.get('active_headline')?.value;
+    // A) If slug is provided, try to find headline by slug first
+    if (headline_slug) {
+        if (!adminClient)
+            adminClient = await createSupabaseAdminClient();
 
-    console.log("Active headline from cookie", activeHeadlineJson)
+        const { data: headlineBySlug, error: slugError } = await adminClient
+            .from('headlines')
+            .select('*')
+            .eq('slug', headline_slug)
+            .eq('active', true)
+            .single();
 
-    // Skip this part if we have the entire headline in cookies already
-    if (!activeHeadlineJson) {
+        if (!slugError && headlineBySlug) {
+            headlineInfo = headlineBySlug as Headline;
 
-        // A) If slug is provided, try to find headline by slug first
-        if (headline_slug) {
-            if (!adminClient)
-                adminClient = await createSupabaseAdminClient();
+            console.log("\tFound headline by slug " + headline_slug)
+        } else
+            console.log("\tNo headline found by slug " + headline_slug)
 
-            const { data: headlineBySlug, error: slugError } = await adminClient
-                .from('headlines')
-                .select('*')
-                .eq('slug', headline_slug)
-                .eq('active', true)
-                .single();
+    }
 
-            if (!slugError && headlineBySlug) {
-                headlineInfo = headlineBySlug as Headline;
-            
-                console.log("\tFound headline by slug " + headline_slug)
-            } else
-                console.log("\tNo headline found by slug " + headline_slug)
-        }
+    if (!headlineInfo) {
+        if (!adminClient)
+            adminClient = await createSupabaseAdminClient();
 
-        if (!headlineInfo) {
-            if (!adminClient)
-                adminClient = await createSupabaseAdminClient();
+        // B) Get active headlines and pick one
+        const { data: headlines, error } = await adminClient
+            .from('headlines')
+            .select('*')
+            .eq('active', true);
 
-            // B) Get active headlines and pick one
-            const { data: headlines, error } = await adminClient
-                .from('headlines')
-                .select('*')
-                .eq('active', true);
+        if (error)
+            throw error;
 
-            if (error)
-                throw error;
+        if (!headlines || headlines.length === 0) {
+            console.log("\tNo headlines found in database, will be null");
 
-            if (headlines && headlines.length > 0) {
+        } else {
+            const savedHeadlineId = headline_id || cookieStore.get('headline_id')?.value;
+
+            if (savedHeadlineId)
+                headlineInfo = headlines.find(headline => headline.id === savedHeadlineId);
+
+            if (!headlineInfo)
                 headlineInfo = headlines[Math.floor(Math.random() * headlines.length)];
-
-                console.log("\tFound headline by random selection: " + headlineInfo.name)
-            } else
-                console.log("\tNo headlines found in database, will be null")
         }
     }
 
+    if (headlineInfo) {
+        cookieStore.set('headline_id', headlineInfo.id, {
+            path: '/',
+            maxAge: 365 * 2 * 24 * 60 * 60, // 2 years
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            httpOnly: false, // Needs to be accessible by client-side JS (e.g., track function)
+        });
+
+        cookieStore.set('active_headline', JSON.stringify(headlineInfo), {
+            path: '/',
+            maxAge: 365 * 2 * 24 * 60 * 60, // 2 years
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            httpOnly: false, // Needs to be accessible by client-side JS (e.g., track function)
+        });
+    }
+
+    cookieStore.set('user_id', userId.toString(), {
+        path: '/',
+        maxAge: 365 * 2 * 24 * 60 * 60, // 2 years
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: false, // Needs to be accessible by client-side JS (e.g., track function)
+    });
+
     return createSuccessResponse({
         user_id: userId,
-        headline: headlineInfo as Headline,
-    });
+        headline: headlineInfo,
+    } as SokolData);
 }); 

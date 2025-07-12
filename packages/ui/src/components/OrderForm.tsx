@@ -8,7 +8,7 @@ import { fetchJsonPost, formatCurrency, formatFullPrice, getDiscountPercent, get
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
-import { UserContextData } from '@repo/ui/lib/types';
+import { SokolData, UserContextData } from '@repo/ui/lib/types';
 import { sendClientErrorEmail, track } from '@repo/ui/lib/clientUtils';
 import { Offer } from '@repo/ui/lib/types';
 import Cookies from 'js-cookie';
@@ -22,7 +22,7 @@ if (!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || !process.env.NEXT_PUBLIC_PAYPA
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
-const StripeCheckoutForm = ({ name, email, primaryOffer, secondaryOffer, totalAmount, currency, userId }: { name: string; email: string; primaryOffer: Offer; secondaryOffer: Offer | null, totalAmount: number, currency: string, userId: string | null }) => {
+const StripeCheckoutForm = ({ name, email, primaryOffer, secondaryOffer, totalAmount, currency, sokolData }: { name: string; email: string; primaryOffer: Offer; secondaryOffer: Offer | null, totalAmount: number, currency: string, sokolData: SokolData | null }) => {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -45,7 +45,8 @@ const StripeCheckoutForm = ({ name, email, primaryOffer, secondaryOffer, totalAm
             currency: currency,
             primary_offer_slug: primaryOffer.slug,
             secondary_offer_slug: secondaryOffer?.slug,
-            user_id: userId
+            user_id: sokolData?.user_id,
+            headline_id: sokolData?.headline?.id
         });
 
         const { error: submitError } = await stripe.confirmPayment({
@@ -75,7 +76,8 @@ const StripeCheckoutForm = ({ name, email, primaryOffer, secondaryOffer, totalAm
                 primary_offer_slug: primaryOffer.slug,
                 secondary_offer_slug: secondaryOffer?.slug,
                 error: submitError.code + "/" + submitError.type,
-                user_id: userId
+                user_id: sokolData?.user_id,
+                headline_id: sokolData?.headline?.id
             });
         }
     };
@@ -208,7 +210,8 @@ const OrderBump = ({ userContext, checked, onChange, offer }: { userContext: Use
 );
 
 const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer: Offer; secondaryOffer: Offer | null; userContext: UserContextData | null; }) => {
-    const { userId, isInitialized } = useSokolSession();
+    const sokolData = useSokolSession();
+
     const [name, setName] = useState(Cookies.get('lead_name')?.trim() || '');
     const [email, setEmail] = useState(Cookies.get('lead_email')?.trim() || '');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -249,20 +252,20 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
         return 'Naručite svoj primjerak danas';
     }, [isSecondaryOfferPrimary, secondaryOffer]);
 
-    const orderFormTitle = useMemo(() => 
+    const orderFormTitle = useMemo(() =>
         displayedOfferForHeading?.metadata?.order_form_heading || defaultHeadingText,
-    [displayedOfferForHeading, defaultHeadingText]);
-    
+        [displayedOfferForHeading, defaultHeadingText]);
+
     const defaultSubtitleText = useMemo(() => {
         if (isSecondaryOfferPrimary) {
             return '';
         }
         return 'Dobit ćete bonus poglavlje za regulaciju živčanog sustava';
     }, [isSecondaryOfferPrimary]);
-    
-    const orderFormSubtitle = useMemo(() => 
+
+    const orderFormSubtitle = useMemo(() =>
         displayedOfferForHeading?.metadata?.order_form_subtitle || defaultSubtitleText,
-    [displayedOfferForHeading, defaultSubtitleText]);
+        [displayedOfferForHeading, defaultSubtitleText]);
 
     const getPrimaryOfferPricing = useCallback(() => {
         if (!primaryOffer || !userContext)
@@ -301,7 +304,7 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
         const primaryOfferPrice = primaryOffer ? getPrimaryOfferPricing() : null;
         const secondaryOfferPrice = secondaryOffer ? getSecondaryOfferPricing() : null;
 
-        if (primaryOfferPrice == null) 
+        if (primaryOfferPrice == null)
             return 0;
 
         let total = isSecondaryOfferPrimary && secondaryOfferPrice ? secondaryOfferPrice.discounted_price_eur : primaryOfferPrice.discounted_price_eur;
@@ -348,6 +351,7 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                 region: userContext.region,
                 primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                 secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
+                user_id: sokolData?.user_id,
             };
 
             console.log("Updating payment intent", body);
@@ -473,7 +477,7 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
             setIsSubmitting(false);
             return;
         }
-        
+
         const trimmedEmail = email.trim().toLowerCase();
 
         // Stricter email validation regex
@@ -520,20 +524,15 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
             if (currentStep === 1) {
                 Cookies.set('lead_name', fullName, { expires: 365 });
                 Cookies.set('lead_email', trimmedEmail, { expires: 365 });
-                
-                // Track sign_up - userId MUST be available from SokolSessionHandler
-                if (!userId) {
-                    // This should never happen as SokolSessionHandler ensures userId exists
-                    throw new Error('Critical error: userId not available from SokolSessionHandler. This indicates session initialization failed.');
-                }
-                
+
                 await track('sign_up', {
                     name: fullName,
                     email: trimmedEmail,
                     region: userContext.region,
                     primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                     secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
-                    user_id: userId
+                    user_id: sokolData?.user_id,
+                    headline_id: sokolData?.headline?.id
                 });
             }
 
@@ -569,7 +568,8 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                 currency: getCurrency(),
                 primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                 secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
-                user_id: userId
+                user_id: sokolData?.user_id,
+                headline_id: sokolData?.headline?.id
             });
 
             if (!clientSecret)
@@ -607,7 +607,8 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                     primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                     secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
                     error: error instanceof Error ? error.message : 'Greška prilikom obrade plaćanja',
-                    user_id: userId
+                    user_id: sokolData?.user_id,
+                    headline_id: sokolData?.headline?.id
                 });
             }
 
@@ -628,20 +629,13 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
         );
     }
 
-    // Ensure session is initialized before rendering form
-    if (!isInitialized) {
+    if (!sokolData)
         return (
             <div className="flex flex-col justify-center items-center min-h-[500px] gap-4">
                 <div className="inline-block animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#6B498F]"></div>
                 <p className="text-[#6B498F]">Priprema sesije...</p>
             </div>
         );
-    }
-
-    // userId MUST be available after initialization
-    if (!userId) {
-        throw new Error('Critical error: Session initialized but userId is not available. This should never happen.');
-    }
 
     return (
         <motion.div
@@ -916,7 +910,8 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                         currency: getCurrency(),
                                                                         primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                                                                         secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
-                                                                        user_id: userId
+                                                                        user_id: sokolData?.user_id,
+                                                                        headline_id: sokolData?.headline?.id
                                                                     });
 
                                                                     const data = await fetchJsonPost('/api/paypal/create-order', {
@@ -941,7 +936,8 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                         primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                                                                         secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
                                                                         error: error instanceof Error ? error.message : 'unknown',
-                                                                        user_id: userId
+                                                                        user_id: sokolData?.user_id,
+                                                                        headline_id: sokolData?.headline?.id
                                                                     });
 
                                                                     setIsSubmitting(false);
@@ -964,7 +960,8 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                         secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
                                                                         payment_id: data.orderID,
                                                                         order_id: data.orderID,
-                                                                        payer_id: data.payerID
+                                                                        payer_id: data.payerID,
+                                                                        user_id: sokolData?.user_id
                                                                     });
 
                                                                     window.location.href = `/success?payment_id=${data.orderID}`;
@@ -989,7 +986,8 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                     primary_offer_slug: secondaryOffer && isSecondaryOfferPrimary ? secondaryOffer.slug : primaryOffer.slug,
                                                                     secondary_offer_slug: secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer.slug : null,
                                                                     error: err instanceof Error ? err : 'PayPal error',
-                                                                    user_id: userId
+                                                                    user_id: sokolData?.user_id,
+                                                                    headline_id: sokolData?.headline?.id
                                                                 });
                                                             }}
                                                             onCancel={() => {
@@ -1019,7 +1017,7 @@ const OrderForm = ({ primaryOffer, secondaryOffer, userContext }: { primaryOffer
                                                                 secondaryOffer={secondaryOffer && includeSecondaryOffer && !isSecondaryOfferPrimary ? secondaryOffer : null}
                                                                 totalAmount={getTotalAmount()}
                                                                 currency={getCurrency()}
-                                                                userId={userId}
+                                                                sokolData={sokolData}
                                                             />
                                                         </Elements>
                                                     ) : (

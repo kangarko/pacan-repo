@@ -4,7 +4,6 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Award, BookOpen, Users, Star, Quote, Heart } from 'lucide-react';
-import { COMPANY_INFO } from '@repo/ui/lib/types';
 import { scrollToOrderForm } from '@repo/ui/lib/clientUtils';
 
 const AuthorSection = () => {
@@ -28,7 +27,7 @@ const AuthorSection = () => {
                             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
                                 <Image
                                     src="/img/kristina.jpg"
-                                    alt={COMPANY_INFO.name}
+                                    alt={process.env.NEXT_PUBLIC_SITE_NAME}
                                     fill
                                     style={{ objectFit: 'cover' }}
                                     sizes="(max-width: 1024px) 100vw, 50vw"

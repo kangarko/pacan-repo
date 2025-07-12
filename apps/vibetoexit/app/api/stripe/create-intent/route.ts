@@ -1,19 +1,14 @@
 import Stripe from 'stripe';
 import { createSupabaseServerClient, createPostHandler, createSuccessResponse, validateRequestBody, createSupabaseAdminClient } from '@repo/ui/lib/serverUtils';
-import { cookies } from 'next/headers';
 import { getPricing } from '@repo/ui/lib/utils';
 import { Offer } from '@repo/ui/lib/types';
 
 export const POST = createPostHandler(async (body) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-    const { name, email, region, primary_offer_slug, secondary_offer_slug } = body;
-    validateRequestBody(body, ['name', 'email', 'region', 'primary_offer_slug']);
 
-    const cookieStore = await cookies();
-    const userId = cookieStore.get('user_id')?.value;
+    const { name, email, region, primary_offer_slug, secondary_offer_slug, user_id } = body;
 
-    if (!userId)
-        throw new Error('Missing user id from cookies for Stripe payment intent: ' + JSON.stringify(body));
+    validateRequestBody(body, ['name', 'email', 'region', 'primary_offer_slug', 'user_id']);
 
     const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -105,7 +100,7 @@ export const POST = createPostHandler(async (body) => {
             name: name,
             email: email,
             region: region,
-            user_id: userId,
+            user_id: user_id,
             primary_offer_slug: primary_offer_slug,
             primary_offer_price: primaryOfferPricing.discounted_price,
             secondary_offer_slug: secondary_offer_slug,

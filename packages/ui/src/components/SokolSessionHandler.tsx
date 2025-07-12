@@ -3,20 +3,13 @@
 import { useEffect, useState, createContext, ReactNode, useContext } from 'react';
 import Cookies from 'js-cookie';
 import { fetchJsonPost } from '@repo/ui/lib/utils';
-import { sendClientErrorEmail, track } from '@repo/ui/lib/clientUtils';
+import { safeLocalStorageGet, safeLocalStorageSet, sendClientErrorEmail, track } from '@repo/ui/lib/clientUtils';
 import { usePathname } from 'next/navigation';
 import Script from 'next/script';
 import { AlertTriangle } from 'lucide-react';
+import { SokolData } from '../lib/types';
 
-interface SokolSessionContextType {
-    isInitialized: boolean;
-    userId: string | null;
-}
-
-const SokolSessionContext = createContext<SokolSessionContextType>({
-    isInitialized: false,
-    userId: null,
-});
+const SokolSessionContext = createContext<SokolData | null>(null);
 
 export const useSokolSession = () => {
     const context = useContext(SokolSessionContext);
@@ -28,8 +21,7 @@ export const useSokolSession = () => {
 
 export default function SokolSessionHandler({ children, lang = 'en' }: { children: ReactNode, lang?: string }) {
     const [cookiesEnabled, setCookiesEnabled] = useState<boolean | null>(null);
-    const [isInitialized, setIsInitialized] = useState(false);
-    const [userId, setUserId] = useState<string | null>(null);
+    const [sokolData, setSokolData] = useState<SokolData | null>(null);
     const [pixelLoaded, setPixelLoaded] = useState(false);
     const pathname = usePathname();
 
@@ -41,7 +33,7 @@ export default function SokolSessionHandler({ children, lang = 'en' }: { childre
         try {
             Cookies.set('cookietest', '1', { sameSite: 'Lax' });
             const cookiesWork = Cookies.get('cookietest') === '1';
-            
+
             // Clean up the test cookie
             Cookies.remove('cookietest');
 
@@ -62,41 +54,31 @@ export default function SokolSessionHandler({ children, lang = 'en' }: { childre
                 const sokolId = searchParams.get('sokol');
                 const headlineSlug = searchParams.get('hd');
 
+                const localStorageUserId = safeLocalStorageGet('user_id', null);
+                const localStorageHeadlineId = safeLocalStorageGet('headline_id', null);
+
                 const response = await fetchJsonPost('/api/sokol/init', {
                     sokol_id: sokolId,
                     headline_slug: headlineSlug,
+                    user_id: localStorageUserId,
+                    headline_id: localStorageHeadlineId
                 });
 
-                console.log('sokol/init returned', response);
+                safeLocalStorageSet('user_id', response.user_id.toString());
+                Cookies.set('user_id', response.user_id);
 
                 if (response.headline) {
-                    Cookies.set('headline_id', response.headline.id, {
-                        path: '/',
-                        expires: 30, // 30 days
-                        sameSite: 'lax',
-                        secure: process.env.NODE_ENV === 'production',
-                    });
+                    safeLocalStorageSet('headline_id', response.headline?.id);
+                    safeLocalStorageSet('active_headline', JSON.stringify(response.headline));
 
-                    Cookies.set('active_headline', JSON.stringify(response.headline), {
-                        path: '/',
-                        expires: 30, // 30 days
-                        sameSite: 'lax',
-                        secure: process.env.NODE_ENV === 'production',
-                    });
+                    Cookies.set('headline_id', response.headline?.id);
+                    Cookies.set('active_headline', JSON.stringify(response.headline));
                 }
 
-                if (!response.user_id)
-                    throw new Error('No user id returned from sokol/init.');
+                console.log("[client] Cookie user_id: " + Cookies.get('user_id'));
+                console.log("[client] Local storage user_id: " + safeLocalStorageGet('user_id', ''));
 
-                Cookies.set('user_id', response.user_id, {
-                    path: '/',
-                    expires: 365 * 2, // 2 years
-                    sameSite: 'lax',
-                    secure: process.env.NODE_ENV === 'production',
-                });
-
-                setUserId(response.user_id);
-                setIsInitialized(true);
+                setSokolData(response);
 
             } catch (error) {
                 sendClientErrorEmail('Error in sokol/init:', error);
@@ -110,13 +92,16 @@ export default function SokolSessionHandler({ children, lang = 'en' }: { childre
 
     // Track page views when pixel is loaded
     useEffect(() => {
-        if (!pixelLoaded || !isInitialized || !userId)
+        if (!pixelLoaded || !sokolData)
             return;
 
-        track('view', { user_id: userId });
-    }, [pathname, pixelLoaded, isInitialized, userId]);
+        console.log("[client] Tracking view for user_id: " + sokolData.user_id + " and headline_id: " + sokolData.headline?.id);
 
-    const value = { isInitialized, userId };
+        track('view', {
+            user_id: sokolData.user_id,
+            headline_id: sokolData.headline?.id
+        });
+    }, [pathname, pixelLoaded, sokolData]);
 
     // Show nothing while checking cookies
     if (cookiesEnabled === null)
@@ -194,12 +179,11 @@ export default function SokolSessionHandler({ children, lang = 'en' }: { childre
         );
     }
 
-    if (!isInitialized) {
+    if (!sokolData)
         return null;
-    }
 
     return (
-        <SokolSessionContext.Provider value={value}>
+        <SokolSessionContext.Provider value={sokolData}>
             {children}
             <div>
                 <Script

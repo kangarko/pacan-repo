@@ -1,12 +1,5 @@
 import { UUID } from "crypto";
 
-// TODO to .env
-export const COMPANY_INFO = {
-    name: "Kristina Mitrović",
-    email: process.env.NEXT_PUBLIC_SUPPORT_EMAIL!,
-    address: "Martina Divalta 210, 31 000 Osijek, Hrvatska",
-};
-
 // ---------------------------------------------------------------------
 // Table cache ---------------------------------------------------------
 // ---------------------------------------------------------------------
@@ -446,6 +439,11 @@ export interface UserContextData {
     isAdmin: boolean;
     transactions: Tracking[];
     region: string;
+}
+
+export interface SokolData {
+    user_id: number;
+    headline: Headline | null;
 }
 
 // ---------------------------------------------------------------------

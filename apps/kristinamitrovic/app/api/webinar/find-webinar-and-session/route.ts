@@ -1,18 +1,11 @@
 import { createErrorResponse, createPostHandler, createSuccessResponse, createSupabaseAdminClient, createSupabaseServerClient, validateRequestBody } from '@repo/ui/lib/serverUtils';
 import { FoundWebinar, Webinar, WebinarActiveSession as WebinarActiveSession } from '@repo/ui/lib/types';
 import { hasOffer } from '@repo/ui/lib/utils';
-import { cookies } from 'next/headers';
 
 export const POST = createPostHandler(async (body) => {
-    const { webinar_slug } = body;
+    const { webinar_slug, user_id } = body;
 
-    validateRequestBody(body, ['webinar_slug']);
-
-    const cookieStore = await cookies();
-    const userId = cookieStore.get('user_id')?.value;
-
-    if (!userId)
-        throw new Error('[find-webinar-and-session] Missing user id from cookies: ' + JSON.stringify(body));
+    validateRequestBody(body, ['webinar_slug', 'user_id']);
 
     const adminClient = await createSupabaseAdminClient();
     const supabase = await createSupabaseServerClient();
@@ -62,7 +55,7 @@ export const POST = createPostHandler(async (body) => {
         .from('webinar_sessions')
         .select('*')
         .eq('webinar_id', webinar.id)
-        .eq('user_id', userId)
+        .eq('user_id', user_id)
         .order('start_date', { ascending: false });
 
     if (sessionsError)

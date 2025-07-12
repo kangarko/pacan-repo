@@ -1,24 +1,18 @@
 import Stripe from 'stripe';
 import { getUserByEmail, createSupabaseAdminClient, getPurchaseByPaymentId, trackServer, createPostHandler, validateRequestBody, createSuccessResponse, sendServerErrorEmail, createErrorResponse, paypalApiRequest } from '@repo/ui/lib/serverUtils';
 import { EmailTemplate, PaymentMethod, PayPalPurchase } from '@repo/ui/lib/types';
-import { cookies } from 'next/headers';
 
 export const POST = createPostHandler(async (body, request) => {
-    const { payment_id } = body;
+    const { payment_id, user_id } = body;
 
-    validateRequestBody(body, ['payment_id']);
+    validateRequestBody(body, ['payment_id', 'user_id']);
 
     const adminClient = await createSupabaseAdminClient();
-    const cookieStore = await cookies();
-
-    const userId = cookieStore.get('user_id')?.value;
-
-    if (!userId)
-        throw new Error('[server/verify-payment] Cookies lack user_id while verifying payment: ' + payment_id);
 
     const startTime = Date.now();
     let midTime = Date.now();
-    console.log("Verifying payment " + payment_id + " for user " + userId);
+
+    console.log("Verifying payment " + payment_id + " for user " + user_id);
 
     let date: string | undefined = undefined;
     let name: string | null = null;
@@ -226,8 +220,8 @@ export const POST = createPostHandler(async (body, request) => {
         const emailData = {
             ...data,
 
-            user_id: userId,
-            setup_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?payment_id=${correctedPaymentId}&sokol=${userId}`,
+            user_id: user_id,
+            setup_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?payment_id=${correctedPaymentId}&sokol=${user_id}`,
             description: primaryOfferSlug + (secondaryOfferSlug ? ' + ' + secondaryOfferSlug : ''),
             has_account: hasAccount,
         };

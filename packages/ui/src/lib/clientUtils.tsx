@@ -219,7 +219,7 @@ export async function track(eventType: EventType, eventData: Record<string, any>
                 ...eventData,
                 
                 // Ensure user_id is included - use from eventData or fallback to cookie
-                user_id: eventData.user_id || Cookies.get('user_id') || null
+                user_id: eventData.user_id || safeLocalStorageGet('user_id', Cookies.get('user_id') || null) || null
             }
         };
 

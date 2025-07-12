@@ -20,7 +20,7 @@ interface OrderData {
 }
 
 export default function SuccessPage() {
-    const { isInitialized } = useSokolSession();
+    const sokolData = useSokolSession();
     const [error, setError] = useState('');
 
     const [isLoggedIn] = useState(false);
@@ -29,7 +29,7 @@ export default function SuccessPage() {
     const [orderData, setOrderData] = useState<OrderData | null>(null);
 
     useEffect(() => {
-        if (!isInitialized)
+        if (!sokolData)
             return;
 
         if (!orderData) {
@@ -40,7 +40,8 @@ export default function SuccessPage() {
                 if (paymentId)
                     try {
                         const data = await fetchJsonPost(`/api/auth/verify-payment`, {
-                            payment_id: paymentId
+                            payment_id: paymentId,
+                            user_id: sokolData?.user_id
                         });
 
                         if (!data.name || !data.email || !data.region || data.has_account === undefined || data.refunded === undefined)
@@ -67,7 +68,7 @@ export default function SuccessPage() {
                 }
             })();
         }
-    }, [orderData, isInitialized]);
+    }, [orderData, sokolData]);
 
     if (error) {
         return (

@@ -91,7 +91,7 @@ const HeroSection = ({ primaryOffer, secondaryOffer, userContext, isLoading: pag
     const [mobileHideTopbar, setMobileHideTopbar] = useState(false);
     const [headline, setHeadline] = useState<Headline | null>(null);
     const [headlineLoading, setHeadlineLoading] = useState(true);
-    const { isInitialized } = useSokolSession();
+    const sokolData = useSokolSession();
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
@@ -112,28 +112,17 @@ const HeroSection = ({ primaryOffer, secondaryOffer, userContext, isLoading: pag
     }, []);
 
     useEffect(() => {
-        if (!isInitialized)
+        if (!sokolData)
             return;
 
-        try {
-            const storedHeadline = Cookies.get('active_headline');
+        setHeadline(sokolData.headline);
+        setHeadlineLoading(false);
 
-            if (storedHeadline)
-                setHeadline(JSON.parse(storedHeadline));
-
-        } catch (error) {
-            sendClientErrorEmail("Error reading headline from cookies", error);
-
-        } finally {
-            setHeadlineLoading(false);
-        }
-    }, [isInitialized]);
+    }, [sokolData]);
 
     const countryCode = userContext?.region;
     const discountPercentage = primaryOffer && countryCode ? getDiscountPercent(primaryOffer, countryCode) : 0;
     const combinedMessage = countryCode ? getRegionMessage(countryCode, discountPercentage) : { celebration: '', expiry: '', discount: '', region: '' };
-
-    //const flagUrl = countryCode ? getFlagUrl(countryCode) : '';
 
     const LoadingSpinner = ({ message = "Učitavanje ponude...", spinnerSize = "md" }: { message?: string; spinnerSize?: "sm" | "md" | "lg" }) => {
         const sizes = {

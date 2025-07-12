@@ -1,18 +1,11 @@
 import { createPostHandler, createSuccessResponse, createSupabaseAdminClient, validateRequestBody } from '@repo/ui/lib/serverUtils';
-import { cookies } from 'next/headers';
 
 export const POST = createPostHandler(async (body) => {
-    const { name, email, region, amount, currency, primary_offer_slug, secondary_offer_slug, order_id, payer_id } = body;
+    const { name, email, region, amount, currency, primary_offer_slug, secondary_offer_slug, order_id, payer_id, user_id } = body;
 
-    validateRequestBody(body, ['name', 'email', 'region', 'amount', 'currency', 'primary_offer_slug', 'secondary_offer_slug', 'order_id', 'payer_id']);
+    validateRequestBody(body, ['name', 'email', 'region', 'amount', 'currency', 'primary_offer_slug', 'secondary_offer_slug', 'order_id', 'payer_id', 'user_id']);
 
-    const cookieStore = await cookies();
     const adminClient = await createSupabaseAdminClient();
-
-    const userId = cookieStore.get('user_id')?.value;
-
-    if (!userId)
-        throw new Error('[server/paypal/save-pending-payment] User id not found from cookie when saving a pending paypal payment for ' + email);
 
     const { data: existingPaypalPurchase, error: paypalPurchaseError } = await adminClient
         .from('paypal_purchases')
@@ -27,7 +20,7 @@ export const POST = createPostHandler(async (body) => {
         throw new Error(`[server/paypal/save-pending-payment] PayPal order id ${order_id} already exists in paypal database for ${email}`);
 
     const storeData = {
-        user_id: userId,
+        user_id: user_id,
         name,
         email,
         region,
