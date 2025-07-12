@@ -641,9 +641,9 @@ export function replaceAccentTags(html: string, isHeadline: boolean = true): str
     // Replace <accent> tags with styled spans or strong tags
     if (isHeadline) {
         // For headlines and subheadlines: use purple text
-        return html.replace(/<accent>/gi, '<span class="text-[#6B498F]">').replace(/<\/accent>/gi, '</span>');
+        return html.replace(/<accent>/gi, '<span class="accent-headline">').replace(/<\/accent>/gi, '</span>');
     } else {
         // For bullet points: use strong with darker purple
-        return html.replace(/<accent>/gi, '<strong class="text-[#4b2c5e]">').replace(/<\/accent>/gi, '</strong>');
+        return html.replace(/<accent>/gi, '<strong class="accent-text">').replace(/<\/accent>/gi, '</strong>');
     }
 }

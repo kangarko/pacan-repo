@@ -2,6 +2,14 @@ body {
     @apply bg-[#FFF9E9] text-[#4b2c5e] antialiased;
 }
 
+.accent-headline {
+    color: #6B498F;
+}
+
+.accent-text {
+    color: #4b2c5e;
+}
+
 ::-webkit-scrollbar-track {
     background: #1a1a1a;
 }
