@@ -11,6 +11,10 @@ body {
     text-fill-color: transparent;
 }
 
+u {
+    color: white;
+}
+
 .accent-text {
     color: #4ade80;
 }

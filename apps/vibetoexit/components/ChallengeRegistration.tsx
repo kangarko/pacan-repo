@@ -167,76 +167,6 @@ const ChallengeRegistration = () => {
             {/* Collaboration Section */}
             <LogosSection />
 
-            {/* What You'll Build Section */}
-            <section id="how-it-works" className="relative py-20 overflow-hidden">
-                {/* Shadow gradients from both sides */}
-                <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-gray-900 via-gray-900/50 to-transparent z-10"></div>
-                <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-gray-900 via-gray-900/50 to-transparent z-10"></div>
-
-                {/* Background decoration */}
-                <div className="absolute inset-0">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-600/10 rounded-full blur-3xl"></div>
-                </div>
-
-                <div className="container mx-auto px-4 relative z-20">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent sm:text-4xl md:text-5xl">
-                            What You&apos;ll Learn
-                        </h2>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-                        {headlineLoading ? (
-                            [...Array(4)].map((_, i) => (
-                                <div key={i} className="bg-gray-800/90 p-6 rounded-xl border border-gray-700/50 h-full">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="rounded-lg h-12 w-12 bg-gray-700/50 animate-pulse"></div>
-                                    </div>
-                                    <div className="h-6 bg-gray-700/50 rounded w-3/4 animate-pulse mb-3"></div>
-                                    <div className="h-4 bg-gray-700/50 rounded w-full animate-pulse"></div>
-                                    <div className="h-4 bg-gray-700/50 rounded w-1/2 animate-pulse mt-2"></div>
-                                </div>
-                            ))
-                        ) : (
-                            (headline?.bullet_points && headline.bullet_points.length > 0 ? headline.bullet_points : fallbackBulletPoints).map((point, index) => {
-                                const { title, description } = parseBulletPoint(point.text);
-                                const cardColors = [
-                                    { border: 'hover:border-indigo-500/50', bg: 'from-indigo-600 to-indigo-500', shadow: 'shadow-indigo-600/20', line: 'from-indigo-600/0 via-indigo-600/50 to-indigo-600/0' },
-                                    { border: 'hover:border-purple-500/50', bg: 'from-purple-600 to-purple-500', shadow: 'shadow-purple-600/20', line: 'from-purple-600/0 via-purple-600/50 to-purple-600/0' },
-                                    { border: 'hover:border-pink-500/50', bg: 'from-pink-600 to-pink-500', shadow: 'shadow-pink-600/20', line: 'from-pink-600/0 via-pink-600/50 to-pink-600/0' },
-                                    { border: 'hover:border-rose-500/50', bg: 'from-rose-600 to-rose-500', shadow: 'shadow-rose-600/20', line: 'from-rose-600/0 via-rose-600/50 to-rose-600/0' }
-                                ];
-                                const color = cardColors[index % cardColors.length];
-
-                                return (
-                                    <div key={index} className="group relative">
-                                        <div className={`relative bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 ${color.border} transition-all duration-300 h-full`}>
-                                            <div className="flex items-center justify-between mb-4">
-                                                <div className={`bg-gradient-to-r ${color.bg} rounded-lg h-12 w-12 flex items-center justify-center shadow-lg ${color.shadow}`}>
-                                                    <span className="font-bold text-lg">{index + 1}</span>
-                                                </div>
-                                                <div className={`w-16 h-1 bg-gradient-to-r ${color.line}`}></div>
-                                            </div>
-                                            <h4 className="font-bold text-xl mb-3 text-white" dangerouslySetInnerHTML={{ __html: replaceAccentTags(title, false) }} />
-                                            {description && <p className="text-gray-300 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: replaceAccentTags(description, false) }} />}
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        )}
-                    </div>
-
-                    {/* Bottom decorative element */}
-                    <div className="flex justify-center mt-12">
-                        <div className="flex items-center gap-2">
-                            <div className="w-20 h-0.5 bg-gradient-to-r from-transparent to-indigo-600"></div>
-                            <div className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse"></div>
-                            <div className="w-20 h-0.5 bg-gradient-to-l from-transparent to-indigo-600"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <AboutUs />
 
             {/* Why Now Section */}
@@ -250,7 +180,7 @@ const ChallengeRegistration = () => {
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-orange-400 via-red-400 to-orange-400 bg-clip-text text-transparent sm:text-4xl md:text-5xl">
-                            Come Build With Us!
+                            2025 Is The Best Opportunity To Join
                         </h2>
                     </div>
 
@@ -268,7 +198,7 @@ const ChallengeRegistration = () => {
                                         Every week, the barrier to entry gets higher. Google releases a new AI tool and instantly devalues dozens of SaaS platforms.
                                     </p>
                                     <div className="mt-6 pt-6 border-t border-gray-700">
-                                        <p className="text-3xl font-bold text-orange-400">-15%</p>
+                                        <p className="text-3xl font-bold text-orange-400">-5%</p>
                                         <p className="text-sm text-gray-400">Opportunities vanishing weekly</p>
                                     </div>
                                 </div>
