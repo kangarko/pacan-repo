@@ -116,13 +116,11 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen relative py-24 overflow-hidden bg-gradient-to-br from-[#FFF9E9] to-[#E1CCEB]">
-            <GradientBackground />
-
+        <div className="min-h-screen relative py-24 overflow-hidden bg-gray-900 text-white">
             <div className="container mx-auto px-4 relative z-10">
                 {isCheckingAuth ? (
                     <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#6B498F]"></div>
+                        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-500"></div>
                     </div>
                 ) : (
                     <motion.div
@@ -133,71 +131,71 @@ export default function LoginPage() {
                     >
 
                         <div className="text-center mb-8">
-                            <div className="bg-[#E1CCEB]/40 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Lock className="w-8 h-8 text-[#6B498F]" />
+                            <div className="bg-purple-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <Lock className="w-8 h-8 text-purple-400" />
                             </div>
-                            <h1 className="text-3xl font-bold text-[#4b2c5e] mb-4">
+                            <h1 className="text-3xl font-bold text-white mb-4">
                                 Sign In
                             </h1>
-                            <p className="text-[#4b2c5e]/80">
+                            <p className="text-gray-300">
                                 Welcome back! Please sign in to your account
                             </p>
                             {/* Back button */}
                             <Link
                                 href="/"
-                                className="inline-flex mt-2 items-center w-full text-center justify-center text-[#6B498F] hover:text-[#4b2c5e] transition-colors mb-8"
+                                className="inline-flex mt-2 items-center w-full text-center justify-center text-indigo-400 hover:text-indigo-300 transition-colors mb-8"
                             >
                                 <ArrowLeft className="w-4 h-4 mr-1" />
                                 <span>Back to home</span>
                             </Link>
                         </div>
 
-                        <div className="bg-[#FFEAFF]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#E1CCEB]/50">
+                        <div className="bg-gray-800/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50">
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-[#4b2c5e]/80 mb-2">
+                                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                                         Email
                                     </label>
                                     <div className="relative">
-                                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6B498F]/70" />
+                                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <input
                                             type="email"
                                             id="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full pl-10 pr-4 py-2 bg-white/70 border border-[#E1CCEB] rounded-lg text-[#4b2c5e]"
+                                            className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-gray-700/50 rounded-lg text-white"
                                             required
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label htmlFor="password" className="block text-sm font-medium text-[#4b2c5e]/80 mb-2">
+                                    <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
                                         Password
                                     </label>
                                     <div className="relative">
-                                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6B498F]/70" />
+                                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <input
                                             type="password"
                                             id="password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
-                                            className="w-full pl-10 pr-4 py-2 bg-white/70 border border-[#E1CCEB] rounded-lg text-[#4b2c5e]"
+                                            className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-gray-700/50 rounded-lg text-white"
                                             required
                                         />
                                     </div>
                                 </div>
 
                                 {error && (
-                                    <div className="bg-red-100/50 border border-red-300 rounded-lg p-4">
-                                        <p className="text-red-800 text-sm">{error}</p>
+                                    <div className="bg-red-900/40 border border-red-500/30 rounded-lg p-4">
+                                        <p className="text-red-300 text-sm">{error}</p>
                                     </div>
                                 )}
 
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full bg-[#6B498F] hover:bg-[#4b2c5e] text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isLoading ? 'Signing in...' : 'Sign In'}
                                 </button>
@@ -205,14 +203,14 @@ export default function LoginPage() {
                                 <div className="text-center space-y-4">
                                     <Link
                                         href="/forgot-password"
-                                        className="block text-sm text-[#6B498F] hover:text-[#4b2c5e] transition-colors"
+                                        className="block text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
                                     >
                                         Forgot your password?
                                     </Link>
 
                                     <p className="text-gray-500 text-xs pt-2">
                                         If you're having trouble logging in, please contact us at{' '}
-                                        <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`} className="text-[#6B498F] hover:text-[#4b2c5e]">
+                                        <a href={`mailto:${process.env.NEXT_PUBLIC_SUPPORT_EMAIL}`} className="text-indigo-400 hover:text-indigo-300">
                                             {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}
                                         </a>
                                     </p>

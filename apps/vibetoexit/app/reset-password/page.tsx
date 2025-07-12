@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { Lock, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import GradientBackground from '@repo/ui/components/GradientBackground';
 import { createSupabaseClient, sendClientErrorEmail } from '@repo/ui/lib/clientUtils';
 
 export default function ResetPasswordPage() {
@@ -64,13 +63,13 @@ export default function ResetPasswordPage() {
         setIsLoading(true);
 
         if (password.length < 6) {
-            setError('Lozinka mora imati najmanje 6 znakova');
+            setError('Password must be at least 6 characters long');
             setIsLoading(false);
             return;
         }
 
         if (password !== confirmPassword) {
-            setError('Lozinke se ne podudaraju');
+            setError('Passwords do not match');
             setIsLoading(false);
             return;
         }
@@ -109,13 +108,13 @@ export default function ResetPasswordPage() {
             let errorMessage = error instanceof Error ? error.message : 'An error occurred while resetting your password';
 
             if (errorMessage.includes('token is invalid or expired'))
-                errorMessage = 'Link za resetiranje lozinke je istekao. Molimo zatražite novi link.';
+                errorMessage = 'The password reset link has expired. Please request a new one.';
             else if (errorMessage.includes('Password should be at least'))
-                errorMessage = 'Lozinka mora imati najmanje 6 znakova';
+                errorMessage = 'Password must be at least 6 characters long';
             else if (errorMessage.includes('Auth session missing'))
-                errorMessage = 'Sesija je istekla. Molimo zatražite novi link za resetiranje lozinke.';
+                errorMessage = 'Your session has expired. Please request a new password reset link.';
             else if (errorMessage.includes('New password should be different from the old password'))
-                errorMessage = 'Nova lozinka mora biti različita od trenutne lozinke.';
+                errorMessage = 'The new password must be different from the current one.';
             else
                 sendClientErrorEmail('Error resetting password:', error);
 
@@ -128,8 +127,7 @@ export default function ResetPasswordPage() {
 
     if (isSuccess) {
         return (
-            <div className="min-h-screen relative bg-gradient-to-br from-[#FFF9E9] to-[#E1CCEB]">
-                <GradientBackground />
+            <div className="min-h-screen relative bg-gray-900 text-white">
                 <div className="container mx-auto px-4 py-24 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -138,21 +136,21 @@ export default function ResetPasswordPage() {
                         className="max-w-md mx-auto"
                     >
                         <div className="text-center mb-8">
-                            <div className="bg-green-100/50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <CheckCircle className="w-8 h-8 text-green-600" />
+                            <div className="bg-green-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <CheckCircle className="w-8 h-8 text-green-500" />
                             </div>
-                            <h1 className="text-3xl font-bold text-[#4b2c5e] mb-4">
-                                Lozinka uspješno promijenjena!
+                            <h1 className="text-3xl font-bold text-white mb-4">
+                                Password Changed Successfully!
                             </h1>
-                            <p className="text-[#4b2c5e]/80 mb-6">
-                                Vaša lozinka je uspješno postavljena. Sada se možete prijaviti s novom lozinkom.
+                            <p className="text-gray-300 mb-6">
+                                Your password has been set. You can now sign in with your new password.
                             </p>
 
                             <Link
                                 href="/login"
-                                className="bg-[#6B498F] hover:bg-[#4b2c5e] text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-block"
+                                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-block"
                             >
-                                Prijavite se
+                                Sign In
                             </Link>
                         </div>
                     </motion.div>
@@ -163,8 +161,7 @@ export default function ResetPasswordPage() {
 
     if (!isValid) {
         return (
-            <div className="min-h-screen relative bg-gradient-to-br from-[#FFF9E9] to-[#E1CCEB]">
-                <GradientBackground />
+            <div className="min-h-screen relative bg-gray-900 text-white">
                 <div className="container mx-auto px-4 py-24 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -173,24 +170,24 @@ export default function ResetPasswordPage() {
                         className="max-w-md mx-auto"
                     >
                         <div className="text-center mb-8">
-                            <div className="bg-red-100/50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Lock className="w-8 h-8 text-red-800" />
+                            <div className="bg-red-900/40 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <Lock className="w-8 h-8 text-red-400" />
                             </div>
-                            <h1 className="text-3xl font-bold text-[#4b2c5e] mb-4">
-                                Nevažeći link
+                            <h1 className="text-3xl font-bold text-white mb-4">
+                                Invalid Link
                             </h1>
-                            <p className="text-[#4b2c5e]/80">
-                                Ovaj link za resetiranje lozinke je istekao ili je nevažeći.
-                                Molimo zatražite novi link.
+                            <p className="text-gray-300">
+                                This password reset link has expired or is invalid.
+                                Please request a new link.
                             </p>
                         </div>
 
-                        <div className="bg-[#FFEAFF]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#E1CCEB]/50 text-center">
+                        <div className="bg-gray-800/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50 text-center">
                             <Link
                                 href="/forgot-password"
-                                className="text-[#6B498F] hover:text-[#4b2c5e] transition-colors"
+                                className="text-indigo-400 hover:text-indigo-300 transition-colors"
                             >
-                                Zatražite novi link za resetiranje
+                                Request a new reset link
                             </Link>
                         </div>
                     </motion.div>
@@ -200,8 +197,7 @@ export default function ResetPasswordPage() {
     }
 
     return (
-        <div className="min-h-screen relative bg-gradient-to-br from-[#FFF9E9] to-[#E1CCEB]">
-            <GradientBackground />
+        <div className="min-h-screen relative bg-gray-900 text-white">
             <div className="container mx-auto px-4 py-24 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -210,65 +206,65 @@ export default function ResetPasswordPage() {
                     className="max-w-md mx-auto"
                 >
                     <div className="text-center mb-8">
-                        <div className="bg-[#E1CCEB]/40 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Lock className="w-8 h-8 text-[#6B498F]" />
+                        <div className="bg-purple-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Lock className="w-8 h-8 text-purple-400" />
                         </div>
-                        <h1 className="text-3xl font-bold text-[#4b2c5e] mb-4">
-                            Postavite novu lozinku
+                        <h1 className="text-3xl font-bold text-white mb-4">
+                            Set a new password
                         </h1>
-                        <p className="text-[#4b2c5e]/80">
-                            Molimo unesite svoju novu lozinku
+                        <p className="text-gray-300">
+                            Please enter your new password
                         </p>
                     </div>
 
-                    <div className="bg-[#FFEAFF]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#E1CCEB]/50">
+                    <div className="bg-gray-800/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50">
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-[#4b2c5e]/80 mb-2">
-                                    Nova lozinka
+                                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+                                    New Password
                                 </label>
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6B498F]/70" />
+                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                     <input
                                         type="password"
                                         id="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 bg-white/70 border border-[#E1CCEB] rounded-lg text-[#4b2c5e]"
+                                        className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-gray-700/50 rounded-lg text-white"
                                         required
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#4b2c5e]/80 mb-2">
-                                    Potvrdite novu lozinku
+                                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-2">
+                                    Confirm New Password
                                 </label>
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6B498F]/70" />
+                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                     <input
                                         type="password"
                                         id="confirmPassword"
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 bg-white/70 border border-[#E1CCEB] rounded-lg text-[#4b2c5e]"
+                                        className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-gray-700/50 rounded-lg text-white"
                                         required
                                     />
                                 </div>
                             </div>
 
                             {error && (
-                                <div className="bg-red-100/50 border border-red-300 rounded-lg p-4">
-                                    <p className="text-red-800 text-sm">{error}</p>
+                                <div className="bg-red-900/40 border border-red-500/30 rounded-lg p-4">
+                                    <p className="text-red-300 text-sm">{error}</p>
                                 </div>
                             )}
 
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full bg-[#6B498F] hover:bg-[#4b2c5e] text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {isLoading ? 'Postavljanje...' : 'Postavite novu lozinku'}
+                                {isLoading ? 'Setting...' : 'Set New Password'}
                             </button>
                         </form>
                     </div>

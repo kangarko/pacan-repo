@@ -6,7 +6,6 @@ import { Mail } from 'lucide-react';
 import Link from 'next/link';
 import { createSupabaseClient } from '@repo/ui/lib/clientUtils';
 import { useRouter } from 'next/navigation';
-import GradientBackground from '@repo/ui/components/GradientBackground';
 import { sendClientErrorEmail } from '@repo/ui/lib/clientUtils';
 import { fetchJsonPost } from '@repo/ui/lib/utils';
 
@@ -48,17 +47,17 @@ export default function ForgotPasswordPage() {
             setSuccess(true);
 
         } catch (error) {
-            let errorMessage = 'Došlo je do greške prilikom slanja emaila za resetiranje lozinke.';
+            let errorMessage = 'An error occurred while sending the password reset email.';
             let isKnownError = false;
 
             if (error instanceof Error) {
                 const errorTranslations: Record<string, string> = {
-                    'User not found': 'Korisnik s ovom email adresom nije pronađen',
-                    'Email not confirmed': 'E-mail adresa nije potvrđena, provjerite svoj email za potvrdu',
-                    'Rate limit exceeded': 'Previše pokušaja, pokušajte kasnije',
-                    'Invalid email': 'Neispravna e-mail adresa',
-                    'Email rate limit exceeded': 'Previše pokušaja, pokušajte kasnije',
-                    'Server error': 'Greška na serveru'
+                    'User not found': 'User with this email address was not found',
+                    'Email not confirmed': 'Email address not confirmed, please check your email for confirmation',
+                    'Rate limit exceeded': 'Too many attempts, please try again later',
+                    'Invalid email': 'Invalid email address',
+                    'Email rate limit exceeded': 'Too many attempts, please try again later',
+                    'Server error': 'Server error'
                 };
 
                 const originalMessage = error.message;
@@ -77,13 +76,11 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="min-h-screen relative py-24 overflow-hidden bg-gradient-to-br from-[#FFF9E9] to-[#E1CCEB]">
-            <GradientBackground />
-
+        <div className="min-h-screen relative py-24 overflow-hidden bg-gray-900 text-white">
             <div className="container mx-auto px-4 relative z-10">
                 {isCheckingAuth ? (
                     <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#6B498F]"></div>
+                        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-500"></div>
                     </div>
                 ) : (
                     <motion.div
@@ -93,72 +90,72 @@ export default function ForgotPasswordPage() {
                         className="max-w-md mx-auto"
                     >
                         <div className="text-center mb-8">
-                            <div className="bg-[#E1CCEB]/40 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Mail className="w-8 h-8 text-[#6B498F]" />
+                            <div className="bg-purple-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <Mail className="w-8 h-8 text-purple-400" />
                             </div>
-                            <h1 className="text-3xl font-bold text-[#4b2c5e] mb-4">
-                                Zaboravili ste lozinku?
+                            <h1 className="text-3xl font-bold text-white mb-4">
+                                Forgot Your Password?
                             </h1>
-                            <p className="text-[#4b2c5e]/80">
-                                Unesite email koji ste koristili pri kupnji knjige
+                            <p className="text-gray-300">
+                                Enter the email you used to purchase the book
                             </p>
                         </div>
 
-                        <div className="bg-[#FFEAFF]/50 backdrop-blur-sm rounded-2xl p-8 border border-[#E1CCEB]/50">
+                        <div className="bg-gray-800/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50">
                             {success && !error ? (
                                 <div className="text-center space-y-4">
-                                    <div className="bg-green-100/50 border border-green-300 rounded-lg p-4">
-                                        <p className="text-green-800">
-                                            Poslali smo Vam email s linkom za resetiranje lozinke.
-                                            Molimo provjerite svoj inbox.
+                                    <div className="bg-green-900/40 border border-green-500/30 rounded-lg p-4">
+                                        <p className="text-green-300">
+                                            We've sent you an email with a link to reset your password.
+                                            Please check your inbox.
                                         </p>
                                     </div>
                                     <Link
                                         href="/login"
-                                        className="block text-[#6B498F] hover:text-[#4b2c5e] transition-colors"
+                                        className="block text-indigo-400 hover:text-indigo-300 transition-colors"
                                     >
-                                        Povratak na prijavu
+                                        Back to login
                                     </Link>
                                 </div>
                             ) : (
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     <div>
-                                        <label htmlFor="email" className="block text-sm font-medium text-[#4b2c5e]/80 mb-2">
+                                        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                                             Email
                                         </label>
                                         <div className="relative">
-                                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6B498F]/70" />
+                                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                             <input
                                                 type="email"
                                                 id="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
-                                                className="w-full pl-10 pr-4 py-2 bg-white/70 border border-[#E1CCEB] rounded-lg text-[#4b2c5e]"
+                                                className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-gray-700/50 rounded-lg text-white"
                                                 required
                                             />
                                         </div>
                                     </div>
 
                                     {error && (
-                                        <div className="bg-red-100/50 border border-red-300 rounded-lg p-4">
-                                            <p className="text-red-800 text-sm">{error}</p>
+                                        <div className="bg-red-900/40 border border-red-500/30 rounded-lg p-4">
+                                            <p className="text-red-300 text-sm">{error}</p>
                                         </div>
                                     )}
 
                                     <button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="w-full bg-[#6B498F] hover:bg-[#4b2c5e] text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
-                                        {isLoading ? 'Slanje...' : 'Pošalji link za resetiranje'}
+                                        {isLoading ? 'Sending...' : 'Send Reset Link'}
                                     </button>
 
                                     <div className="text-center">
                                         <Link
                                             href="/login"
-                                            className="text-sm text-[#6B498F] hover:text-[#4b2c5e] transition-colors"
+                                            className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
                                         >
-                                            Povratak na prijavu
+                                            Back to login
                                         </Link>
                                     </div>
                                 </form>
