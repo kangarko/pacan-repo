@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 import { fetchJsonPost } from '@repo/ui/lib/utils';
+import { track } from '../lib/clientUtils';
+import { useSokolSession } from './SokolSessionHandler';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -45,6 +47,7 @@ interface EverwebinarSliderOptinProps {
 
 export function EverwebinarSliderOptin({ webinarId }: EverwebinarSliderOptinProps) {
     const router = useRouter();
+    const sokolData = useSokolSession();
 
     const [formStep, setFormStep] = useState(0);
     const [email, setEmail] = useState('');
@@ -211,6 +214,9 @@ export function EverwebinarSliderOptin({ webinarId }: EverwebinarSliderOptinProp
         setName(trimmedName);
 
         try {
+            if (!sokolData)
+                throw new Error('Sokol data not found');
+    
             setRedirecting(true);
 
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -231,8 +237,18 @@ export function EverwebinarSliderOptin({ webinarId }: EverwebinarSliderOptinProp
                 return;
             }
 
+            await track('sign_up', {
+                name: trimmedName,
+                email: email,
+                region: Cookies.get('region') || '',
+                primary_offer_slug: 'vibe-to-exit-accelerator', // TODO
+                user_id: sokolData?.user_id,
+                headline_id: sokolData?.headline?.id
+            });
+
             if (response.status === 'success' && response.user?.thank_you_url) {
                 router.push(response.user.thank_you_url);
+
             } else {
                 setError('Nije uspjelo kreiranje sesije webinara. Molimo pokušajte ponovno ili nas kontaktirajte.');
                 setSubmitting(false);
@@ -246,6 +262,8 @@ export function EverwebinarSliderOptin({ webinarId }: EverwebinarSliderOptinProp
         }
     };
 
+    if (!sokolData)
+        return null;
 
     return (
         <Fragment>

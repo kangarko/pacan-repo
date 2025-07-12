@@ -1,11 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, CheckCircle, Clock, DollarSign, Rocket, Sparkles, Trophy } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import AboutUs from '@/components/AboutUs';
 import VideoFacade from '@/components/VideoFacade';
 import { EverwebinarSliderOptin } from '@repo/ui/components/EverwebinarSliderOptin';
+import { useSokolSession } from '@repo/ui/components/SokolSessionHandler';
+import { Headline } from '@repo/ui/lib/types';
+import { replaceAccentTags } from '@repo/ui/lib/utils';
+import { getIconByName } from '@repo/ui/lib/iconMapping';
 import TopAnnouncementBar from './TopAnnouncementBar';
 
 const webinarId = 5;
@@ -17,23 +21,31 @@ const LogosSection = dynamic(() => import('./LogosSection'), {
 });
 
 const ChallengeRegistration = () => {
-    const whatYoullLearn = [
-        {
-            title: "Product Market Fit",
-            description: "Identify a problem worth solving using our AI-powered market research framework"
-        },
-        {
-            title: "Agentic MVP Building",
-            description: "No coding - build a complete product using agentic AI tools at low cost."
-        },
-        {
-            title: "Collecting Payments",
-            description: "Connect Stripe and PayPal to collect revenue immediately."
-        },
-        {
-            title: "Exit Strategy",
-            description: "Choose your outcome: cashflow, funding, or sale with our exit strategy."
-        }
+    const [headline, setHeadline] = useState<Headline | null>(null);
+    const [headlineLoading, setHeadlineLoading] = useState(true);
+    const sokolData = useSokolSession();
+
+    useEffect(() => {
+        if (!sokolData)
+            return;
+
+        setHeadline(sokolData.headline);
+        setHeadlineLoading(false);
+
+    }, [sokolData]);
+
+    const parseBulletPoint = (text: string) => {
+        const titleMatch = text.match(/<strong>(.*?)<\/strong>/i);
+        const title = titleMatch ? titleMatch[1] : text;
+        const description = titleMatch ? text.replace(/<strong>.*?<\/strong>/i, '').trim() : '';
+        return { title, description };
+    };
+
+    const fallbackBulletPoints = [
+        { icon: 'Rocket', text: '<strong>Product Market Fit</strong> Identify a problem worth solving using our AI-powered market research framework' },
+        { icon: 'Cpu', text: '<strong>Agentic MVP Building</strong> No coding - build a complete product using agentic AI tools at low cost.' },
+        { icon: 'DollarSign', text: '<strong>Collecting Payments</strong> Connect Stripe and PayPal to collect revenue immediately.' },
+        { icon: 'TrendingUp', text: '<strong>Exit Strategy</strong> Choose your outcome: cashflow, funding, or sale with our exit strategy.' }
     ];
 
     return (
@@ -60,18 +72,40 @@ const ChallengeRegistration = () => {
 
             {/* Hero Section - Redesigned */}
             <section className="container mx-auto px-4 pt-8 pb-8 md:pt-12 md:pb-6">
-                <div className="text-center mb-8 lg:mb-12 relative z-10 max-w-6xl mx-auto">
-                    <h1 className="relative text-2xl font-extrabold leading-tight mb-6 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
-                        <span className="block lg:inline-flex lg:items-baseline lg:gap-x-4">
-                            The Step-by-Step Vibe Coding Playbook
-                        </span>
-                        <span className="block mt-4 lg:mt-2 lg:text-4xl text-white/90 font-semibold">
-                            to Grow Your SaaS to <span className="text-green-400 font-extrabold">$10k/mo</span> Even If You&apos;re <span className="underline decoration-pink-400 decoration-2 underline-offset-4">Starting From Zero</span>
-                        </span>
-                    </h1>
-                    <p className="text-xl text-gray-300 mx-auto">
-                        (Without hardcosts, investors or spending months on learning to code)
-                    </p>
+                <div className="text-center mb-8 lg:mb-12 relative z-10 max-w-5xl mx-auto">
+                    {headlineLoading ? (
+                        <>
+                            <div className="h-14 sm:h-28 md:h-32 bg-gray-700/50 rounded-lg w-3/4 mx-auto animate-pulse mb-6"></div>
+                            <div className="h-6 bg-gray-700/50 rounded-lg w-1/2 mx-auto animate-pulse"></div>
+                        </>
+                    ) : headline ? (
+                        <>
+                            <h1
+                                className="relative text-2xl font-bold leading-tight mb-6 mx-auto text-transparent bg-clip-text bg-white drop-shadow-lg tracking-tight sm:text-3xl md:text-4xl lg:text-5xl"
+                                dangerouslySetInnerHTML={{ __html: replaceAccentTags(headline.headline, true) }}
+                            />
+                            {headline.subheadline && (
+                                <p
+                                    className="text-xl text-gray-300 mx-auto"
+                                    dangerouslySetInnerHTML={{ __html: replaceAccentTags(headline.subheadline, true) }}
+                                />
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="relative text-2xl font-extrabold leading-tight mb-6 mx-auto text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
+                                <span className="block lg:inline-flex lg:items-baseline lg:gap-x-4">
+                                    The Step-by-Step Vibe Coding Playbook
+                                </span>
+                                <span className="block mt-4 lg:mt-2 lg:text-4xl text-white/90 font-semibold">
+                                    to Grow Your SaaS to <span className="text-green-400 font-extrabold">$10k/mo</span> Even If You&apos;re <span className="underline decoration-pink-400 decoration-2 underline-offset-4">Starting From Zero</span>
+                                </span>
+                            </h1>
+                            <p className="text-xl text-gray-300 mx-auto">
+                                (Without hardcosts, investors or spending months on learning to code)
+                            </p>
+                        </>
+                    )}
                 </div>
 
                 <div className="max-w-md mx-auto relative z-10" id="registration-form">
@@ -95,19 +129,36 @@ const ChallengeRegistration = () => {
 
                     <div className="relative z-10">
                         <h2 className="text-2xl font-bold mb-6 text-white sm:text-3xl">On This Workshop, You Will Learn...</h2>
-                        <ul className="space-y-4">
-                            {whatYoullLearn.map((item, index) => (
-                                <li key={index} className="flex items-start gap-3">
-                                    <div className="bg-green-500/20 rounded-full p-1.5 mt-0.5 flex-shrink-0">
-                                        <CheckCircle className="w-5 h-5 text-green-400" />
+                        {headlineLoading ? (
+                            <div className="space-y-4">
+                                {[...Array(4)].map((_, i) => (
+                                    <div key={i} className="flex items-start gap-3">
+                                        <div className="bg-gray-700/50 rounded-full p-1.5 mt-0.5 flex-shrink-0 w-8 h-8 animate-pulse"></div>
+                                        <div className="flex-1 space-y-2 py-1">
+                                            <div className="h-5 bg-gray-700/50 rounded w-3/4 animate-pulse"></div>
+                                            <div className="h-4 bg-gray-700/50 rounded w-full animate-pulse"></div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                                        <p className="text-gray-400">{item.description}</p>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                                ))}
+                            </div>
+                        ) : (
+                            <ul className="space-y-4">
+                                {(headline?.bullet_points && headline.bullet_points.length > 0 ? headline.bullet_points : fallbackBulletPoints).map((point, index) => {
+                                    const { title, description } = parseBulletPoint(point.text);
+                                    return (
+                                        <li key={index} className="flex items-start gap-3">
+                                            <div className="bg-green-500/20 rounded-full p-1.5 mt-0.5 flex-shrink-0">
+                                                {getIconByName(point.icon, { className: "w-5 h-5 text-green-400" }) || <CheckCircle className="w-5 h-5 text-green-400" />}
+                                            </div>
+                                            <div>
+                                                <h3 className="text-lg text-white" dangerouslySetInnerHTML={{ __html: replaceAccentTags(title, false) }} />
+                                                {description && <p className="text-gray-400" dangerouslySetInnerHTML={{ __html: replaceAccentTags(description, false) }} />}
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        )}
                     </div>
                 </div>
             </section>
@@ -135,57 +186,44 @@ const ChallengeRegistration = () => {
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-                        <div className="group relative">
-                            <div className="relative bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 hover:border-indigo-500/50 transition-all duration-300 h-full">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-lg h-12 w-12 flex items-center justify-center shadow-lg shadow-indigo-600/20">
-                                        <span className="font-bold text-lg">1</span>
+                        {headlineLoading ? (
+                            [...Array(4)].map((_, i) => (
+                                <div key={i} className="bg-gray-800/90 p-6 rounded-xl border border-gray-700/50 h-full">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div className="rounded-lg h-12 w-12 bg-gray-700/50 animate-pulse"></div>
                                     </div>
-                                    <div className="w-16 h-1 bg-gradient-to-r from-indigo-600/0 via-indigo-600/50 to-indigo-600/0"></div>
+                                    <div className="h-6 bg-gray-700/50 rounded w-3/4 animate-pulse mb-3"></div>
+                                    <div className="h-4 bg-gray-700/50 rounded w-full animate-pulse"></div>
+                                    <div className="h-4 bg-gray-700/50 rounded w-1/2 animate-pulse mt-2"></div>
                                 </div>
-                                <h4 className="font-bold text-xl mb-3 text-white">Product Market Fit</h4>
-                                <p className="text-gray-300 text-sm leading-relaxed">Identify a problem worth solving using our AI-powered market research framework</p>
-                            </div>
-                        </div>
+                            ))
+                        ) : (
+                            (headline?.bullet_points && headline.bullet_points.length > 0 ? headline.bullet_points : fallbackBulletPoints).map((point, index) => {
+                                const { title, description } = parseBulletPoint(point.text);
+                                const cardColors = [
+                                    { border: 'hover:border-indigo-500/50', bg: 'from-indigo-600 to-indigo-500', shadow: 'shadow-indigo-600/20', line: 'from-indigo-600/0 via-indigo-600/50 to-indigo-600/0' },
+                                    { border: 'hover:border-purple-500/50', bg: 'from-purple-600 to-purple-500', shadow: 'shadow-purple-600/20', line: 'from-purple-600/0 via-purple-600/50 to-purple-600/0' },
+                                    { border: 'hover:border-pink-500/50', bg: 'from-pink-600 to-pink-500', shadow: 'shadow-pink-600/20', line: 'from-pink-600/0 via-pink-600/50 to-pink-600/0' },
+                                    { border: 'hover:border-rose-500/50', bg: 'from-rose-600 to-rose-500', shadow: 'shadow-rose-600/20', line: 'from-rose-600/0 via-rose-600/50 to-rose-600/0' }
+                                ];
+                                const color = cardColors[index % cardColors.length];
 
-                        <div className="group relative">
-                            <div className="relative bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 h-full">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="bg-gradient-to-r from-purple-600 to-purple-500 rounded-lg h-12 w-12 flex items-center justify-center shadow-lg shadow-purple-600/20">
-                                        <span className="font-bold text-lg">2</span>
+                                return (
+                                    <div key={index} className="group relative">
+                                        <div className={`relative bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 ${color.border} transition-all duration-300 h-full`}>
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className={`bg-gradient-to-r ${color.bg} rounded-lg h-12 w-12 flex items-center justify-center shadow-lg ${color.shadow}`}>
+                                                    <span className="font-bold text-lg">{index + 1}</span>
+                                                </div>
+                                                <div className={`w-16 h-1 bg-gradient-to-r ${color.line}`}></div>
+                                            </div>
+                                            <h4 className="font-bold text-xl mb-3 text-white" dangerouslySetInnerHTML={{ __html: replaceAccentTags(title, false) }} />
+                                            {description && <p className="text-gray-300 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: replaceAccentTags(description, false) }} />}
+                                        </div>
                                     </div>
-                                    <div className="w-16 h-1 bg-gradient-to-r from-purple-600/0 via-purple-600/50 to-purple-600/0"></div>
-                                </div>
-                                <h4 className="font-bold text-xl mb-3 text-white">Agentic MVP Building</h4>
-                                <p className="text-gray-300 text-sm leading-relaxed">No coding - build a complete product using agentic AI tools at low cost.</p>
-                            </div>
-                        </div>
-
-                        <div className="group relative">
-                            <div className="relative bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 hover:border-pink-500/50 transition-all duration-300 h-full">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="bg-gradient-to-r from-pink-600 to-pink-500 rounded-lg h-12 w-12 flex items-center justify-center shadow-lg shadow-pink-600/20">
-                                        <span className="font-bold text-lg">3</span>
-                                    </div>
-                                    <div className="w-16 h-1 bg-gradient-to-r from-pink-600/0 via-pink-600/50 to-pink-600/0"></div>
-                                </div>
-                                <h4 className="font-bold text-xl mb-3 text-white">Collecting Payments</h4>
-                                <p className="text-gray-300 text-sm leading-relaxed">Connect Stripe and PayPal to collect revenue immediately. </p>
-                            </div>
-                        </div>
-
-                        <div className="group relative">
-                            <div className="relative bg-gray-800/90 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 hover:border-rose-500/50 transition-all duration-300 h-full">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="bg-gradient-to-r from-rose-600 to-rose-500 rounded-lg h-12 w-12 flex items-center justify-center shadow-lg shadow-rose-600/20">
-                                        <span className="font-bold text-lg">4</span>
-                                    </div>
-                                    <div className="w-16 h-1 bg-gradient-to-r from-rose-600/0 via-rose-600/50 to-rose-600/0"></div>
-                                </div>
-                                <h4 className="font-bold text-xl mb-3 text-white">Exit Strategy</h4>
-                                <p className="text-gray-300 text-sm leading-relaxed">Choose your outcome: cashflow, funding, or sale with our exit strategy.</p>
-                            </div>
-                        </div>
+                                );
+                            })
+                        )}
                     </div>
 
                     {/* Bottom decorative element */}

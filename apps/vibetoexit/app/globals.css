@@ -4,11 +4,15 @@ body {
 }
 
 .accent-headline {
-    color: white;
+    background: linear-gradient(to right, #818cf8, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
 }
 
 .accent-text {
-    color: #ffd700;
+    color: #4ade80;
 }
 
 ::-webkit-scrollbar-track {
